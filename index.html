@@ -488,11 +488,9 @@
     </div>
     <div class="card" style="margin-top:8px">
       <h3 style="margin-bottom:8px">Google Sheets Sync</h3>
-      <p style="font-size:13px; color:var(--text-light); line-height:1.5; margin-bottom:12px;">
-        Paste your Google Apps Script URL here to auto-sync check-ins to a Google Sheet. Dad can view the Sheet anytime.
+      <p style="font-size:13px; color:var(--text-light); line-height:1.5;">
+        &#x2705; Auto-syncing check-ins to Dad's Google Sheet.
       </p>
-      <input type="url" class="setting-input wide" id="setting-sheet-url" placeholder="https://script.google.com/macros/s/..." onchange="saveSheetURL()">
-      <div id="sync-test-status" class="sync-status" style="margin-top:6px"></div>
     </div>
     <div class="card" style="margin-top:8px">
       <button class="btn-export" onclick="exportData()">&#x1F4CB; Copy Data to Clipboard</button>
@@ -557,6 +555,7 @@
   <script>
     // ========== CONSTANTS ==========
     const STORAGE_KEY = 'stretchTracker';
+    const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyqfsVDxK7azk-l_zGqt1REqkIgMsnlZ02mtyloQ0LNwQ1yj8Q59_pWLa1Uupz16Nzb/exec';
     const EMOJIS = ['', '\u{1F616}', '\u{1F615}', '\u{1F610}', '\u{1F642}', '\u{1F601}'];
     const LABELS = ['', 'Very tight', 'A bit tight', 'Normal', 'A bit loose', 'Very loose'];
     const PAIN_EMOJIS = ['', '\u{1F610}', '\u{1F615}', '\u{1F61F}', '\u{1F627}', '\u{1F62D}'];
@@ -677,7 +676,6 @@
       if (checkShareMode()) return;
       const data = loadData();
       document.getElementById('setting-name').value = data.userName || 'Max';
-      document.getElementById('setting-sheet-url').value = data.sheetURL || '';
       updateGreeting();
       updateCheckinScreen();
     }
@@ -1381,8 +1379,7 @@
 
     // ========== GOOGLE SHEETS SYNC ==========
     async function pushToSheet(entry) {
-      const data = loadData();
-      const url = data.sheetURL;
+      const url = SHEET_URL;
       if (!url) return;
       const statusEl = document.getElementById('sync-status-checkin');
       try {
@@ -1411,15 +1408,6 @@
 
     // ========== SETTINGS ==========
     function saveName() { const data = loadData(); data.userName = document.getElementById('setting-name').value.trim() || 'Max'; saveData(data); }
-    function saveSheetURL() {
-      const data = loadData();
-      data.sheetURL = document.getElementById('setting-sheet-url').value.trim();
-      saveData(data);
-      const status = document.getElementById('sync-test-status');
-      if (data.sheetURL) { status.textContent = '\u2705 URL saved. Entries will sync on next check-in.'; status.className = 'sync-status success'; }
-      else { status.textContent = 'Sync disabled (no URL)'; status.className = 'sync-status'; }
-    }
-
     function exportData() {
       const json = JSON.stringify(loadData(), null, 2);
       navigator.clipboard.writeText(json).then(() => { alert('Data copied to clipboard!'); }).catch(() => {
