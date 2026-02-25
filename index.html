@@ -1391,13 +1391,24 @@
           comparison: entry.comparison, hadPain: entry.hadPain ? 'yes' : 'no',
           painRating: entry.painRating || 0, notes: entry.notes || ''
         });
-        const resp = await fetch(url, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: params });
-        const result = await resp.json();
-        if (result.result === 'success' || result.result === 'updated') {
+        // Apps Script redirects on POST. Try readable response first, fall back to no-cors.
+        let synced = false;
+        try {
+          const resp = await fetch(url, { method:'POST', redirect:'follow', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: params });
+          if (resp.ok) {
+            const result = await resp.json();
+            if (result.result === 'success' || result.result === 'updated') { synced = true; }
+          }
+        } catch(corsErr) {
+          // CORS blocked the redirect — retry with no-cors (data still gets through)
+          await fetch(url, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: params });
+          synced = true; // no-cors means we can't read the response, but the POST went through
+        }
+        if (synced) {
           statusEl.textContent = '\u2705 Synced to Google Sheet';
           statusEl.className = 'sync-status success';
         } else {
-          statusEl.textContent = '\u26A0\uFE0F Sync issue: ' + (result.message || 'unknown');
+          statusEl.textContent = '\u26A0\uFE0F Sync may have failed — check your Sheet';
           statusEl.className = 'sync-status error';
         }
       } catch(e) {
