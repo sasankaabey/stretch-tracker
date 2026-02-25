@@ -113,6 +113,26 @@
     .compare-btn[data-value="same"].selected { border-color: #9CA3AF; background: #F9FAFB; }
     .compare-btn[data-value="worse"].selected, .compare-btn[data-value="yes"].selected { border-color: var(--orange); background: #FFF5EE; }
 
+    #keptiton-buttons .compare-btn[data-value="all-night"].selected { border-color: var(--green); background: #EEFFF2; }
+    #keptiton-buttons .compare-btn[data-value="most"].selected { border-color: var(--light-green); background: #F4FFEE; }
+    #keptiton-buttons .compare-btn[data-value="some"].selected { border-color: var(--yellow); background: #FFFCE8; }
+    #keptiton-buttons .compare-btn[data-value="no"].selected { border-color: var(--orange); background: #FFF5EE; }
+
+    .warrior-streak {
+      background: linear-gradient(135deg, #EDE9FE, #E0E7FF);
+      border-radius: var(--radius); padding: 14px 16px; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600;
+    }
+    .warrior-streak .emoji { font-size: 24px; }
+
+    .keptiton-badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-left: 6px;
+    }
+    .keptiton-badge.all-night { background: #EEFFF2; color: #16A34A; }
+    .keptiton-badge.most { background: #F4FFEE; color: #65A30D; }
+    .keptiton-badge.some { background: #FFFCE8; color: #CA8A04; }
+    .keptiton-badge.no { background: #FFF5EE; color: #EA580C; }
+
     .notes-toggle { font-size: 14px; color: var(--blue-leg); cursor: pointer; font-weight: 600; background: none; border: none; padding: 8px 0; }
     .notes-area {
       width: 100%; min-height: 80px; border-radius: 12px; border: 2px solid #E5E7EB;
@@ -317,6 +337,10 @@
       <span class="emoji">&#x1F525;</span>
       <span id="streak-text"></span>
     </div>
+    <div id="warrior-streak-banner" class="warrior-streak" style="display:none">
+      <span class="emoji" id="warrior-emoji">&#x1F6E1;&#xFE0F;</span>
+      <span id="warrior-streak-text"></span>
+    </div>
 
     <div id="leg-reminder" class="reminder" style="display:none">
       <span class="emoji">&#x1F4A1;</span>
@@ -357,6 +381,18 @@
             <span class="emoji">&#x1F9B5;</span>
             RIGHT
           </button>
+        </div>
+      </div>
+
+      <!-- Step: Kept it on? -->
+      <div id="step-keptiton" class="card fade-in" style="display:none">
+        <h2>Did you keep the stretcher on all night?</h2>
+        <p style="font-size:14px; color:var(--text-light); margin-bottom:16px">Be honest &#x2014; we know it's tough! &#x1F4AA;</p>
+        <div class="compare-buttons" id="keptiton-buttons">
+          <button class="compare-btn" data-value="all-night" onclick="selectKeptItOn('all-night')"><span class="emoji">&#x1F31F;</span>All night &#x2014; crushed it!</button>
+          <button class="compare-btn" data-value="most" onclick="selectKeptItOn('most')"><span class="emoji">&#x1F4AA;</span>Most of the night</button>
+          <button class="compare-btn" data-value="some" onclick="selectKeptItOn('some')"><span class="emoji">&#x1F44D;</span>Some of the night</button>
+          <button class="compare-btn" data-value="no" onclick="selectKeptItOn('no')"><span class="emoji">&#x1F634;</span>Took it off</button>
         </div>
       </div>
 
@@ -564,6 +600,21 @@
       'Great job tracking today!', 'You\'re doing awesome!', 'Your PT will be impressed!',
       'Keep it up, champ!', 'Nice work staying on top of it!', 'Way to be consistent!', 'Every day counts!'
     ];
+    const WARRIOR_TITLES = [
+      { min: 0, title: 'Stretcher Starter', emoji: '\u{1F331}' },
+      { min: 3, title: 'Night Warrior', emoji: '\u{1F6E1}\uFE0F' },
+      { min: 7, title: 'Stretch Champion', emoji: '\u{1F3C6}' },
+      { min: 14, title: 'Iron Legs', emoji: '\u{1F9BE}' },
+      { min: 30, title: 'Legendary Stretcher', emoji: '\u{1F451}' }
+    ];
+    const WARRIOR_ENCOURAGEMENTS = {
+      'all-night': ['You kept it on ALL NIGHT! That takes serious guts!','Full night! Your calves are thanking you!','Champion move keeping it on all night!','All night warrior! Your PT is going to love this!'],
+      'most': ['Most of the night is still awesome!','Almost all night! That takes real effort!','So close to a full night! That still counts big time!'],
+      'some': ['Some is better than none! Keep building up!','Good effort! Every hour with it on helps!','Nice try! It gets easier the more you do it!'],
+      'no': ['Thanks for being honest! Try again tonight!','Honesty matters! Tomorrow is a fresh start!','No worries! The stretcher is tough. Try again tonight!']
+    };
+    const KEPTITON_LABELS = { 'all-night':'\u{1F31F} All night!', 'most':'\u{1F4AA} Most of the night', 'some':'\u{1F44D} Some of the night', 'no':'\u{1F634} Took it off' };
+    const KEPTITON_SHORT = { 'all-night':'\u{1F31F} All night', 'most':'\u{1F4AA} Most', 'some':'\u{1F44D} Some', 'no':'\u{1F634} Off' };
 
     // ========== DATA LAYER ==========
     function loadData() {
@@ -594,15 +645,50 @@
       return streak;
     }
 
-    // ========== CHECK-IN STATE ==========
-    let checkinState = { type:'morning', step:0, leg:null, stretchedRating:null, unstretchedRating:null, comparison:null, hadPain:null, painRating:null, notes:'', editingId:null };
+    function getWarriorStreak() {
+      const data = loadData();
+      const mornings = data.entries.filter(e => e.type === 'morning' && e.keptItOn).sort((a, b) => b.date.localeCompare(a.date));
+      if (mornings.length === 0) return 0;
+      let streak = 0, checkDate = new Date();
+      if (mornings[0].date !== getToday()) return 0;
+      if (mornings[0].keptItOn === 'no') return 0;
+      streak = 1;
+      checkDate.setDate(checkDate.getDate() - 1);
+      for (let i = 1; i < mornings.length; i++) {
+        if (mornings[i].date === checkDate.toISOString().slice(0, 10) && mornings[i].keptItOn !== 'no') {
+          streak++; checkDate.setDate(checkDate.getDate() - 1);
+        } else break;
+      }
+      return streak;
+    }
+    function getWarriorStreakBefore(todayDate) {
+      const data = loadData();
+      const mornings = data.entries.filter(e => e.type === 'morning' && e.keptItOn && e.date < todayDate).sort((a, b) => b.date.localeCompare(a.date));
+      if (mornings.length === 0) return 0;
+      let streak = 0, checkDate = new Date(todayDate + 'T12:00:00');
+      checkDate.setDate(checkDate.getDate() - 1);
+      for (let i = 0; i < mornings.length; i++) {
+        if (mornings[i].date === checkDate.toISOString().slice(0, 10) && mornings[i].keptItOn !== 'no') {
+          streak++; checkDate.setDate(checkDate.getDate() - 1);
+        } else break;
+      }
+      return streak;
+    }
+    function getWarriorTitle(streak) {
+      let current = WARRIOR_TITLES[0];
+      for (const t of WARRIOR_TITLES) { if (streak >= t.min) current = t; }
+      return current;
+    }
 
-    const STEPS = ['leg', 'stretched', 'unstretched', 'compare', 'pain', 'save'];
+    // ========== CHECK-IN STATE ==========
+    let checkinState = { type:'morning', step:0, leg:null, keptItOn:null, stretchedRating:null, unstretchedRating:null, comparison:null, hadPain:null, painRating:null, notes:'', editingId:null };
+
+    const STEPS = ['leg', 'keptiton', 'stretched', 'unstretched', 'compare', 'pain', 'save'];
     const MIDDAY_STEPS = ['stretched', 'unstretched', 'compare', 'pain', 'save'];
 
     function getCurrentSteps() { return checkinState.type === 'midday' ? MIDDAY_STEPS : STEPS; }
     function resetCheckinState() {
-      checkinState = { type:'morning', step:0, leg:null, stretchedRating:null, unstretchedRating:null, comparison:null, hadPain:null, painRating:null, notes:'', editingId:null };
+      checkinState = { type:'morning', step:0, leg:null, keptItOn:null, stretchedRating:null, unstretchedRating:null, comparison:null, hadPain:null, painRating:null, notes:'', editingId:null };
     }
 
     // ========== SHARED VIEW CHECK ==========
@@ -651,8 +737,10 @@
           const dateStr = `${days[dateObj.getDay()]}, ${months[dateObj.getMonth()]} ${dateObj.getDate()}`;
           const leg = legMap[e.l] || 'left';
           const legLabel = leg === 'left' ? 'Left' : 'Right';
+          const keptMap = {a:'all-night',m:'most',s:'some',n:'no'};
+          const keptBadge = e.k && keptMap[e.k] ? `<span class="keptiton-badge ${keptMap[e.k]}">${KEPTITON_SHORT[keptMap[e.k]]}</span>` : '';
           html += `<div class="history-entry">
-            <div class="date-row"><span class="date">${dateStr}</span><span class="leg-chip ${leg}">${legLabel} stretched</span></div>
+            <div class="date-row"><span class="date">${dateStr}</span><span><span class="leg-chip ${leg}">${legLabel}</span>${keptBadge}</span></div>
             <div class="ratings">
               <div class="rating-item"><span class="type">Stretched</span><span class="face">${EMOJIS[e.s]}</span><span class="val">${LABELS[e.s]}</span></div>
               <div class="rating-item"><span class="type">Other</span><span class="face">${EMOJIS[e.u]}</span><span class="val">${LABELS[e.u]}</span></div>
@@ -699,6 +787,14 @@
       const streakBanner = document.getElementById('streak-banner');
       if (streak >= 2) { streakBanner.style.display = 'flex'; document.getElementById('streak-text').textContent = `${streak} day streak!`; }
       else { streakBanner.style.display = 'none'; }
+      const wStreak = getWarriorStreak();
+      const wBanner = document.getElementById('warrior-streak-banner');
+      if (wStreak >= 2) {
+        const wTitle = getWarriorTitle(wStreak);
+        wBanner.style.display = 'flex';
+        document.getElementById('warrior-emoji').textContent = wTitle.emoji;
+        document.getElementById('warrior-streak-text').textContent = `${wStreak} nights with stretcher! ${wTitle.title}`;
+      } else { wBanner.style.display = 'none'; }
 
       const lastEntry = getLastMorningEntry();
       const reminderEl = document.getElementById('leg-reminder');
@@ -738,7 +834,8 @@
     function editMorningCheckin() {
       const morning = getTodayMorning(); if (!morning) return;
       resetCheckinState(); checkinState.type = 'morning'; checkinState.editingId = morning.id;
-      checkinState.leg = morning.stretchedLeg; checkinState.stretchedRating = morning.stretchedLegRating;
+      checkinState.leg = morning.stretchedLeg; checkinState.keptItOn = morning.keptItOn || null;
+      checkinState.stretchedRating = morning.stretchedLegRating;
       checkinState.unstretchedRating = morning.unstretchedLegRating; checkinState.comparison = morning.comparison;
       checkinState.hadPain = morning.hadPain != null ? morning.hadPain : null;
       checkinState.painRating = morning.painRating || null;
@@ -766,6 +863,12 @@
         document.getElementById('step-leg').style.display = 'block';
         document.querySelectorAll('.leg-btn').forEach(btn => btn.classList.remove('selected'));
         if (checkinState.leg) document.querySelector(`.leg-btn.${checkinState.leg}`).classList.add('selected');
+      } else if (currentStep === 'keptiton') {
+        document.getElementById('step-keptiton').style.display = 'block';
+        document.querySelectorAll('#keptiton-buttons .compare-btn').forEach(btn => {
+          btn.classList.remove('selected');
+          if (checkinState.keptItOn && btn.dataset.value === checkinState.keptItOn) btn.classList.add('selected');
+        });
       } else if (currentStep === 'stretched') {
         document.getElementById('stretched-leg-name').textContent = checkinState.leg === 'left' ? 'LEFT' : 'RIGHT';
         document.getElementById('step-stretched').style.display = 'block';
@@ -822,6 +925,12 @@
       document.querySelector(`.leg-btn.${leg}`).classList.add('selected');
       setTimeout(advanceStep, 200);
     }
+    function selectKeptItOn(value) {
+      checkinState.keptItOn = value;
+      document.querySelectorAll('#keptiton-buttons .compare-btn').forEach(b => b.classList.remove('selected'));
+      document.querySelector(`#keptiton-buttons .compare-btn[data-value="${value}"]`).classList.add('selected');
+      setTimeout(advanceStep, 200);
+    }
     function selectRating(btn) {
       const value = parseInt(btn.dataset.value), target = btn.dataset.target, parent = btn.closest('.card');
       parent.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
@@ -862,10 +971,13 @@
       const entry = {
         id: `${today}-${checkinState.type}`, date: today, type: checkinState.type,
         timestamp: new Date().toISOString(), stretchedLeg: checkinState.leg,
+        keptItOn: checkinState.type === 'morning' ? checkinState.keptItOn : null,
         stretchedLegRating: checkinState.stretchedRating, unstretchedLegRating: checkinState.unstretchedRating,
         comparison: checkinState.comparison, hadPain: checkinState.hadPain, painRating: checkinState.painRating,
         notes: checkinState.notes
       };
+      // Check for level-up before saving
+      const prevWStreak = getWarriorStreakBefore(today);
       const data = loadData();
       if (checkinState.editingId) {
         const idx = data.entries.findIndex(e => e.id === checkinState.editingId);
@@ -875,23 +987,43 @@
         data.entries.push(entry);
       }
       saveData(data);
-      showSuccess(entry);
+      const newWStreak = getWarriorStreak();
+      const prevTitle = getWarriorTitle(prevWStreak);
+      const newTitle = getWarriorTitle(newWStreak);
+      const leveledUp = entry.keptItOn && entry.keptItOn !== 'no' && newTitle.min > prevTitle.min;
+      showSuccess(entry, leveledUp, newTitle, newWStreak);
       fireConfetti();
+      if (leveledUp) setTimeout(fireConfetti, 400);
       pushToSheet(entry);
     }
 
-    function showSuccess(entry) {
+    function showSuccess(entry, leveledUp, warriorTitle, warriorStreak) {
       document.querySelectorAll('[id^="step-"]').forEach(el => el.style.display = 'none');
       document.getElementById('step-dots').innerHTML = '';
-      document.getElementById('success-message').textContent = ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)];
-      document.getElementById('success-encourage').textContent = checkinState.type === 'midday' ? 'Midday check-in saved!' : 'Morning check-in saved!';
+      // Pick encouragement message
+      let mainMsg, subMsg;
+      if (entry.keptItOn && leveledUp) {
+        mainMsg = `LEVEL UP! ${warriorTitle.emoji}`;
+        subMsg = `You reached ${warriorTitle.title}! ${warriorStreak} nights strong!`;
+      } else if (entry.keptItOn) {
+        const pool = WARRIOR_ENCOURAGEMENTS[entry.keptItOn];
+        mainMsg = pool[Math.floor(Math.random() * pool.length)];
+        subMsg = 'Morning check-in saved!';
+      } else {
+        mainMsg = ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)];
+        subMsg = checkinState.type === 'midday' ? 'Midday check-in saved!' : 'Morning check-in saved!';
+      }
+      document.getElementById('success-message').textContent = mainMsg;
+      document.getElementById('success-encourage').textContent = subMsg;
       const legName = entry.stretchedLeg === 'left' ? 'Left' : 'Right';
       const otherLeg = entry.stretchedLeg === 'left' ? 'Right' : 'Left';
       const compText = entry.comparison === 'better' ? 'Yes, better' : entry.comparison === 'same' ? 'About the same' : 'No, worse';
+      let keptItOnRow = entry.keptItOn ? `<div class="row"><span class="label">Stretcher</span><span>${KEPTITON_LABELS[entry.keptItOn]}</span></div>` : '';
       let painRow = '';
       if (entry.hadPain === true) painRow = `<div class="row"><span class="label">Pain</span><span>${PAIN_EMOJIS[entry.painRating]} ${PAIN_LABELS[entry.painRating]}</span></div>`;
       else if (entry.hadPain === false) painRow = `<div class="row"><span class="label">Pain</span><span>None \u{1F60A}</span></div>`;
       document.getElementById('success-summary').innerHTML = `
+        ${keptItOnRow}
         <div class="row"><span class="label">Stretched leg</span><span>${legName} ${EMOJIS[entry.stretchedLegRating]} ${LABELS[entry.stretchedLegRating]}</span></div>
         <div class="row"><span class="label">${otherLeg} leg</span><span>${EMOJIS[entry.unstretchedLegRating]} ${LABELS[entry.unstretchedLegRating]}</span></div>
         <div class="row"><span class="label">Feels different?</span><span>${compText}</span></div>
@@ -950,7 +1082,7 @@
         const legLabel = entry.stretchedLeg === 'left' ? 'Left' : 'Right';
         const otherLeg = entry.stretchedLeg === 'left' ? 'Right' : 'Left';
         return `<div class="history-entry">
-          <div class="date-row"><span class="date">${dateStr}</span><span class="leg-chip ${entry.stretchedLeg}">${legLabel} leg stretched</span></div>
+          <div class="date-row"><span class="date">${dateStr}</span><span><span class="leg-chip ${entry.stretchedLeg}">${legLabel} leg</span>${entry.keptItOn ? `<span class="keptiton-badge ${entry.keptItOn}">${KEPTITON_SHORT[entry.keptItOn]}</span>` : ''}</span></div>
           <div class="ratings">
             <div class="rating-item"><span class="type">Stretched (${legLabel})</span><span class="face">${EMOJIS[entry.stretchedLegRating]}</span><span class="val">${LABELS[entry.stretchedLegRating]}</span></div>
             <div class="rating-item"><span class="type">${otherLeg} leg</span><span class="face">${EMOJIS[entry.unstretchedLegRating]}</span><span class="val">${LABELS[entry.unstretchedLegRating]}</span></div>
@@ -1014,6 +1146,12 @@
       const painDays = mornings.filter(e => e.hadPain===true).length;
       const painEntries = mornings.filter(e => e.hadPain===true && e.painRating);
       const avgPain = painEntries.length > 0 ? (painEntries.reduce((s,e)=>s+e.painRating,0)/painEntries.length).toFixed(1) : 'N/A';
+      const withKeptItOn = mornings.filter(e => e.keptItOn);
+      const allNightDays = withKeptItOn.filter(e => e.keptItOn === 'all-night').length;
+      const mostDays = withKeptItOn.filter(e => e.keptItOn === 'most').length;
+      const someDaysK = withKeptItOn.filter(e => e.keptItOn === 'some').length;
+      const offDays = withKeptItOn.filter(e => e.keptItOn === 'no').length;
+      const compliancePct = withKeptItOn.length > 0 ? Math.round(((allNightDays + mostDays) / withKeptItOn.length) * 100) : 'N/A';
 
       let html = `<h1 style="font-size:22px;margin-bottom:4px;">Stretch Tracker Report</h1>
         <p style="color:var(--text-light);font-size:14px;margin-bottom:20px;">For ${escapeHtml(name)} | ${firstDate} - ${lastDate}</p>
@@ -1023,8 +1161,14 @@
           <div class="stat-box"><div class="value">${avgStretched}</div><div class="label">Avg Stretched</div></div>
           <div class="stat-box"><div class="value">${avgUnstretched}</div><div class="label">Avg Unstretched</div></div>
           <div class="stat-box ${painDays > 0 ? 'warn' : ''}"><div class="value">${painDays}</div><div class="label">Days with Pain</div></div>
-          <div class="stat-box ${painDays > 0 ? 'warn' : ''}"><div class="value">${avgPain}</div><div class="label">Avg Pain Rating</div></div>
+          <div class="stat-box ${compliancePct !== 'N/A' && compliancePct >= 70 ? 'highlight' : compliancePct !== 'N/A' && compliancePct < 50 ? 'warn' : ''}"><div class="value">${compliancePct}${compliancePct !== 'N/A' ? '%' : ''}</div><div class="label">Nights Worn</div></div>
         </div>
+        ${withKeptItOn.length > 0 ? `<div class="card" style="margin-bottom:16px"><h3>Stretcher Compliance</h3><div style="margin-top:8px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:14px">\u{1F31F} All night:</span><strong>${allNightDays} night${allNightDays!==1?'s':''}</strong></div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:14px">\u{1F4AA} Most of night:</span><strong>${mostDays} night${mostDays!==1?'s':''}</strong></div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:14px">\u{1F44D} Some of night:</span><strong>${someDaysK} night${someDaysK!==1?'s':''}</strong></div>
+          <div style="display:flex;align-items:center;gap:8px"><span style="font-size:14px">\u{1F634} Took off:</span><strong>${offDays} night${offDays!==1?'s':''}</strong></div>
+        </div></div>` : ''}
         <div class="card" style="margin-bottom:16px"><h3>Comparison Breakdown</h3><div style="margin-top:8px">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:14px">\u{1F44D} Felt better:</span><strong>${betterDays} day${betterDays!==1?'s':''}</strong></div>
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:14px">\u{1F937} About the same:</span><strong>${sameDays} day${sameDays!==1?'s':''}</strong></div>
@@ -1041,15 +1185,16 @@
       }
 
       html += `<div class="card"><h3>Full Log</h3><div style="overflow-x:auto"><table class="data-table"><thead><tr>
-        <th>Date</th><th>Leg</th><th>Str.</th><th>Other</th><th>Result</th><th>Pain</th></tr></thead><tbody>
+        <th>Date</th><th>Leg</th><th>Worn</th><th>Str.</th><th>Other</th><th>Result</th><th>Pain</th></tr></thead><tbody>
         ${mornings.map(e => {
           const dateObj = new Date(e.date+'T12:00:00');
           const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
           const d = `${months[dateObj.getMonth()]} ${dateObj.getDate()}`;
           const leg = e.stretchedLeg==='left'?'L':'R';
+          const worn = e.keptItOn==='all-night'?'\u{1F31F}':e.keptItOn==='most'?'\u{1F4AA}':e.keptItOn==='some'?'\u{1F44D}':e.keptItOn==='no'?'\u{1F634}':'-';
           const comp = e.comparison==='better'?'\u{1F44D}':e.comparison==='same'?'\u{1F937}':'\u{1F44E}';
           const pain = e.hadPain ? PAIN_EMOJIS[e.painRating] : '-';
-          return `<tr><td>${d}</td><td>${leg}</td><td>${EMOJIS[e.stretchedLegRating]}</td><td>${EMOJIS[e.unstretchedLegRating]}</td><td>${comp}</td><td>${pain}</td></tr>`;
+          return `<tr><td>${d}</td><td>${leg}</td><td>${worn}</td><td>${EMOJIS[e.stretchedLegRating]}</td><td>${EMOJIS[e.unstretchedLegRating]}</td><td>${comp}</td><td>${pain}</td></tr>`;
         }).join('')}</tbody></table></div></div>`;
 
       const withNotes = mornings.filter(e => e.notes);
@@ -1083,8 +1228,9 @@
         const dateStr = `${d.getMonth()+1}/${d.getDate()}`;
         const leg = e.stretchedLeg==='left'?'L':'R';
         const comp = e.comparison==='better'?'Better':e.comparison==='same'?'Same':'Worse';
+        const worn = e.keptItOn==='all-night'?'AllNight':e.keptItOn==='most'?'Most':e.keptItOn==='some'?'Some':e.keptItOn==='no'?'Off':'';
         const pain = e.hadPain ? ` Pain:${e.painRating}/5` : '';
-        text += `${dateStr} (${leg}) Str:${e.stretchedLegRating}/5 Other:${e.unstretchedLegRating}/5 ${comp}${pain}\n`;
+        text += `${dateStr} (${leg}) ${worn?'Worn:'+worn+' ':''}Str:${e.stretchedLegRating}/5 Other:${e.unstretchedLegRating}/5 ${comp}${pain}\n`;
       });
       return text;
     }
@@ -1094,7 +1240,8 @@
       const mornings = data.entries.filter(e => e.type==='morning').sort((a,b) => b.date.localeCompare(a.date)).slice(0, dayCount||7);
       const shareData = { n: data.userName||'Max', e: mornings.map(e => ({
         d:e.date, l:e.stretchedLeg[0], s:e.stretchedLegRating, u:e.unstretchedLegRating,
-        c:e.comparison[0], p:e.hadPain?e.painRating:0
+        c:e.comparison[0], p:e.hadPain?e.painRating:0,
+        k:e.keptItOn ? e.keptItOn[0] : ''
       }))};
       const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(shareData))));
       const baseURL = window.location.href.split('#')[0].split('?')[0];
@@ -1388,6 +1535,7 @@
         const params = new URLSearchParams({
           action: 'write',
           date: entry.date, type: entry.type, leg: entry.stretchedLeg,
+          keptItOn: entry.keptItOn || '',
           stretchedRating: entry.stretchedLegRating, unstretchedRating: entry.unstretchedLegRating,
           comparison: entry.comparison, hadPain: entry.hadPain ? 'yes' : 'no',
           painRating: entry.painRating || 0, notes: entry.notes || ''
