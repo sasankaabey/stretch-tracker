@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Stretch">
+  <meta name="theme-color" content="#4A90D9">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <title>Stretch Tracker</title>
+  <style>
+    :root {
+      --blue-leg: #4A90D9;
+      --blue-leg-light: #E3F0FF;
+      --green-leg: #6BCB77;
+      --green-leg-light: #E8F8E0;
+      --bg: #F0F4FF;
+      --card: #FFFFFF;
+      --text: #2D3436;
+      --text-light: #636E72;
+      --red: #FF6B6B;
+      --orange: #FFA06B;
+      --yellow: #FFD93D;
+      --light-green: #A8E06C;
+      --green: #6BCB77;
+      --radius: 16px;
+      --nav-height: calc(64px + env(safe-area-inset-bottom, 0px));
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      min-height: 100dvh;
+      -webkit-text-size-adjust: 100%;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+    }
+
+    /* Screens */
+    .screen { display: none; padding: 20px 16px calc(var(--nav-height) + 16px); min-height: 100vh; min-height: 100dvh; }
+    .screen.active { display: block; }
+
+    /* Header */
+    .header { padding: 12px 0 8px; }
+    .header h1 { font-size: 28px; font-weight: 700; }
+    .header p { font-size: 15px; color: var(--text-light); margin-top: 2px; }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .card h2 { font-size: 17px; font-weight: 600; margin-bottom: 14px; }
+    .card h3 { font-size: 15px; font-weight: 600; margin-bottom: 10px; color: var(--text-light); }
+
+    /* Leg selection buttons */
+    .leg-buttons { display: flex; gap: 12px; }
+    .leg-btn {
+      flex: 1;
+      min-height: 100px;
+      border-radius: var(--radius);
+      border: 3px solid transparent;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .leg-btn .emoji { font-size: 36px; }
+    .leg-btn.left { background: var(--blue-leg-light); color: var(--blue-leg); }
+    .leg-btn.right { background: var(--green-leg-light); color: var(--green-leg); }
+    .leg-btn.selected { transform: scale(1.03); }
+    .leg-btn.left.selected { border-color: var(--blue-leg); box-shadow: 0 4px 12px rgba(74,144,217,0.25); }
+    .leg-btn.right.selected { border-color: var(--green-leg); box-shadow: 0 4px 12px rgba(107,203,119,0.25); }
+
+    /* Emoji rating */
+    .emoji-row { display: flex; justify-content: center; gap: 8px; }
+    .emoji-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      width: 64px;
+      padding: 10px 4px;
+      border-radius: 14px;
+      border: 3px solid transparent;
+      background: var(--card);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      opacity: 0.5;
+    }
+    .emoji-btn .face { font-size: 32px; line-height: 1.2; }
+    .emoji-btn .label { font-size: 10px; font-weight: 600; color: var(--text-light); text-align: center; line-height: 1.2; }
+    .emoji-btn.selected {
+      opacity: 1;
+      transform: scale(1.12);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .emoji-btn[data-value="1"].selected { border-color: var(--red); background: #FFF0F0; }
+    .emoji-btn[data-value="2"].selected { border-color: var(--orange); background: #FFF5EE; }
+    .emoji-btn[data-value="3"].selected { border-color: var(--yellow); background: #FFFCE8; }
+    .emoji-btn[data-value="4"].selected { border-color: var(--light-green); background: #F4FFEE; }
+    .emoji-btn[data-value="5"].selected { border-color: var(--green); background: #EEFFF2; }
+
+    /* Leg badge */
+    .leg-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .leg-badge.stretched { background: #DBEAFE; color: #2563EB; }
+    .leg-badge.unstretched { background: #F3F4F6; color: #6B7280; }
+
+    /* Comparison buttons */
+    .compare-buttons { display: flex; flex-direction: column; gap: 10px; }
+    .compare-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      border: 2px solid #E5E7EB;
+      background: var(--card);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .compare-btn .emoji { font-size: 24px; }
+    .compare-btn.selected { transform: scale(1.02); }
+    .compare-btn[data-value="better"].selected { border-color: var(--green); background: #EEFFF2; }
+    .compare-btn[data-value="same"].selected { border-color: #9CA3AF; background: #F9FAFB; }
+    .compare-btn[data-value="worse"].selected { border-color: var(--orange); background: #FFF5EE; }
+
+    /* Notes toggle */
+    .notes-toggle {
+      font-size: 14px;
+      color: var(--blue-leg);
+      cursor: pointer;
+      font-weight: 600;
+      background: none;
+      border: none;
+      padding: 8px 0;
+    }
+    .notes-area {
+      width: 100%;
+      min-height: 80px;
+      border-radius: 12px;
+      border: 2px solid #E5E7EB;
+      padding: 12px;
+      font-size: 15px;
+      font-family: inherit;
+      resize: vertical;
+      margin-top: 8px;
+      display: none;
+    }
+    .notes-area.visible { display: block; }
+
+    /* Primary button */
+    .btn-primary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 18px;
+      border-radius: var(--radius);
+      border: none;
+      background: var(--blue-leg);
+      color: white;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-primary:active { transform: scale(0.97); }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Success screen */
+    .success-card {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .success-card .big-emoji { font-size: 64px; margin-bottom: 16px; }
+    .success-card h2 { font-size: 24px; margin-bottom: 8px; }
+    .success-card p { color: var(--text-light); font-size: 15px; margin-bottom: 8px; }
+    .success-summary { text-align: left; margin-top: 20px; }
+    .success-summary .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #F3F4F6;
+      font-size: 15px;
+    }
+    .success-summary .row:last-child { border-bottom: none; }
+    .success-summary .label { color: var(--text-light); }
+
+    /* Reminder banner */
+    .reminder {
+      background: linear-gradient(135deg, #E3F0FF, #E8F8E0);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .reminder .emoji { font-size: 24px; }
+
+    /* Already logged banner */
+    .already-logged {
+      text-align: center;
+      padding: 30px 20px;
+    }
+    .already-logged .emoji { font-size: 48px; margin-bottom: 12px; }
+    .already-logged h2 { font-size: 20px; margin-bottom: 6px; }
+    .already-logged p { color: var(--text-light); font-size: 14px; }
+    .btn-secondary {
+      display: inline-block;
+      padding: 12px 24px;
+      border-radius: var(--radius);
+      border: 2px solid var(--blue-leg);
+      background: transparent;
+      color: var(--blue-leg);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 16px;
+    }
+
+    /* History cards */
+    .history-entry {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .history-entry .date-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .history-entry .date { font-weight: 700; font-size: 15px; }
+    .history-entry .leg-chip {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .leg-chip.left { background: var(--blue-leg-light); color: var(--blue-leg); }
+    .leg-chip.right { background: var(--green-leg-light); color: var(--green-leg); }
+    .history-entry .ratings {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+    .history-entry .rating-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .history-entry .rating-item .type { font-size: 11px; color: var(--text-light); font-weight: 600; }
+    .history-entry .rating-item .face { font-size: 28px; }
+    .history-entry .rating-item .val { font-size: 11px; color: var(--text-light); }
+    .compare-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .compare-badge.better { background: #EEFFF2; color: #16A34A; }
+    .compare-badge.same { background: #F3F4F6; color: #6B7280; }
+    .compare-badge.worse { background: #FFF5EE; color: #EA580C; }
+    .midday-indicator {
+      font-size: 11px;
+      color: var(--text-light);
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .history-entry .notes-text {
+      font-size: 13px;
+      color: var(--text-light);
+      margin-top: 6px;
+      font-style: italic;
+    }
+    .history-empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-light);
+    }
+    .history-empty .emoji { font-size: 48px; margin-bottom: 12px; }
+
+    /* PT Summary */
+    .pt-summary-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 14px;
+      border-radius: var(--radius);
+      border: 2px solid var(--blue-leg);
+      background: transparent;
+      color: var(--blue-leg);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 16px;
+    }
+    .pt-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--bg);
+      z-index: 200;
+      overflow-y: auto;
+      padding: 20px 16px;
+    }
+    .pt-overlay.active { display: block; }
+    .pt-overlay .close-btn {
+      position: sticky;
+      top: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--card);
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--blue-leg);
+      cursor: pointer;
+      padding: 10px 0;
+      margin-bottom: 12px;
+      z-index: 10;
+    }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .stat-box {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-box .value { font-size: 28px; font-weight: 800; }
+    .stat-box .label { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+    .stat-box.highlight { background: #EEFFF2; }
+    .stat-box.highlight .value { color: #16A34A; }
+
+    /* Chart container */
+    .chart-container {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+    }
+    .chart-container h3 { margin-bottom: 12px; }
+    .chart-legend {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .chart-legend span { display: flex; align-items: center; gap: 4px; }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* Data table */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .data-table th {
+      text-align: left;
+      padding: 8px 6px;
+      border-bottom: 2px solid #E5E7EB;
+      font-weight: 700;
+      color: var(--text-light);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+    .data-table td {
+      padding: 8px 6px;
+      border-bottom: 1px solid #F3F4F6;
+    }
+
+    /* Streak */
+    .streak-banner {
+      background: linear-gradient(135deg, #FFF7E0, #FFEDD5);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .streak-banner .emoji { font-size: 24px; }
+
+    /* Settings */
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid #F3F4F6;
+    }
+    .setting-item:last-child { border-bottom: none; }
+    .setting-label { font-weight: 600; }
+    .setting-input {
+      border: 2px solid #E5E7EB;
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 15px;
+      font-family: inherit;
+      width: 140px;
+      text-align: right;
+    }
+    .btn-danger {
+      width: 100%;
+      padding: 14px;
+      border-radius: var(--radius);
+      border: 2px solid var(--red);
+      background: transparent;
+      color: var(--red);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    .btn-export {
+      width: 100%;
+      padding: 14px;
+      border-radius: var(--radius);
+      border: 2px solid var(--blue-leg);
+      background: transparent;
+      color: var(--blue-leg);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Bottom nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-around;
+      background: var(--card);
+      border-top: 1px solid #E5E7EB;
+      padding: 6px 0 calc(6px + env(safe-area-inset-bottom, 0px));
+      z-index: 100;
+    }
+    .nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      font-size: 22px;
+      min-width: 72px;
+      min-height: 48px;
+      padding: 6px 0;
+      background: none;
+      border: none;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+    .nav-btn .nav-label { font-size: 11px; font-weight: 600; }
+    .nav-btn.active { color: var(--blue-leg); }
+
+    /* Confetti */
+    .confetti-container {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      z-index: 300;
+      overflow: hidden;
+    }
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      animation: confetti-fall 1.5s ease-out forwards;
+    }
+    @keyframes confetti-fall {
+      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* Confirm modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 250;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-box {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 24px;
+      width: 100%;
+      max-width: 320px;
+      text-align: center;
+    }
+    .modal-box h3 { margin-bottom: 8px; }
+    .modal-box p { color: var(--text-light); font-size: 14px; margin-bottom: 20px; }
+    .modal-actions { display: flex; gap: 12px; }
+    .modal-actions button { flex: 1; padding: 12px; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; }
+    .modal-cancel { border: 2px solid #E5E7EB; background: transparent; color: var(--text); }
+    .modal-confirm { border: none; background: var(--red); color: white; }
+
+    /* Step indicators */
+    .steps { display: flex; gap: 6px; margin-bottom: 20px; }
+    .step-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #E5E7EB;
+      transition: background 0.2s;
+    }
+    .step-dot.active { background: var(--blue-leg); }
+    .step-dot.done { background: var(--green); }
+
+    /* Checkin type toggle */
+    .checkin-toggle {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .toggle-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 12px;
+      border: 2px solid #E5E7EB;
+      background: var(--card);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+    }
+    .toggle-btn.active { border-color: var(--blue-leg); color: var(--blue-leg); background: #EEF4FF; }
+
+    /* Fade in */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeIn 0.25s ease forwards; }
+  </style>
+</head>
+<body>
+
+  <!-- ========== CHECK-IN SCREEN ========== -->
+  <div id="screen-checkin" class="screen active">
+    <div class="header">
+      <h1 id="greeting">Good morning!</h1>
+      <p id="checkin-date"></p>
+    </div>
+
+    <!-- Streak banner -->
+    <div id="streak-banner" class="streak-banner" style="display:none">
+      <span class="emoji">&#x1F525;</span>
+      <span id="streak-text"></span>
+    </div>
+
+    <!-- Reminder for which leg tonight -->
+    <div id="leg-reminder" class="reminder" style="display:none">
+      <span class="emoji">&#x1F4A1;</span>
+      <span id="reminder-text"></span>
+    </div>
+
+    <!-- Already logged state -->
+    <div id="already-logged" class="already-logged card" style="display:none">
+      <div class="emoji">&#x2705;</div>
+      <h2>Already logged today!</h2>
+      <p>Your morning check-in is saved.</p>
+      <button class="btn-secondary" onclick="startMiddayCheckin()">Add Midday Check-in</button>
+      <br>
+      <button class="btn-secondary" style="margin-top:8px" onclick="editMorningCheckin()">Edit Morning Entry</button>
+    </div>
+
+    <!-- Midday already logged -->
+    <div id="midday-logged" style="display:none; text-align:center; padding:20px" class="card">
+      <div style="font-size:48px; margin-bottom:12px">&#x1F389;</div>
+      <h2>All logged for today!</h2>
+      <p style="color:var(--text-light); font-size:14px">Morning and midday check-ins saved. Check your History tab to see your progress.</p>
+    </div>
+
+    <!-- Checkin form steps -->
+    <div id="checkin-form" style="display:none">
+      <!-- Type toggle (morning/midday) -->
+      <div id="checkin-type-display" style="display:none; margin-bottom:12px">
+        <span id="checkin-type-label" style="font-size:13px; font-weight:600; color:var(--blue-leg); background:var(--blue-leg-light); padding:4px 12px; border-radius:20px;"></span>
+      </div>
+
+      <!-- Step dots -->
+      <div class="steps" id="step-dots"></div>
+
+      <!-- Step 1: Which leg -->
+      <div id="step-leg" class="card fade-in" style="display:none">
+        <h2>Which leg wore the stretcher?</h2>
+        <div class="leg-buttons" style="margin-top:16px">
+          <button class="leg-btn left" onclick="selectLeg('left')">
+            <span class="emoji">&#x1F9B5;</span>
+            LEFT
+          </button>
+          <button class="leg-btn right" onclick="selectLeg('right')">
+            <span class="emoji">&#x1F9B5;</span>
+            RIGHT
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Rate stretched leg -->
+      <div id="step-stretched" class="card fade-in" style="display:none">
+        <h2>How does your <span id="stretched-leg-name"></span> leg feel?
+          <span class="leg-badge stretched">Stretched</span>
+        </h2>
+        <div class="emoji-row" style="margin-top:16px">
+          <button class="emoji-btn" data-value="1" data-target="stretched" onclick="selectRating(this)">
+            <span class="face">&#x1F616;</span>
+            <span class="label">Very tight</span>
+          </button>
+          <button class="emoji-btn" data-value="2" data-target="stretched" onclick="selectRating(this)">
+            <span class="face">&#x1F615;</span>
+            <span class="label">A bit tight</span>
+          </button>
+          <button class="emoji-btn" data-value="3" data-target="stretched" onclick="selectRating(this)">
+            <span class="face">&#x1F610;</span>
+            <span class="label">Normal</span>
+          </button>
+          <button class="emoji-btn" data-value="4" data-target="stretched" onclick="selectRating(this)">
+            <span class="face">&#x1F642;</span>
+            <span class="label">A bit loose</span>
+          </button>
+          <button class="emoji-btn" data-value="5" data-target="stretched" onclick="selectRating(this)">
+            <span class="face">&#x1F601;</span>
+            <span class="label">Very loose</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: Rate unstretched leg -->
+      <div id="step-unstretched" class="card fade-in" style="display:none">
+        <h2>How does your <span id="unstretched-leg-name"></span> leg feel?
+          <span class="leg-badge unstretched">No stretcher</span>
+        </h2>
+        <div class="emoji-row" style="margin-top:16px">
+          <button class="emoji-btn" data-value="1" data-target="unstretched" onclick="selectRating(this)">
+            <span class="face">&#x1F616;</span>
+            <span class="label">Very tight</span>
+          </button>
+          <button class="emoji-btn" data-value="2" data-target="unstretched" onclick="selectRating(this)">
+            <span class="face">&#x1F615;</span>
+            <span class="label">A bit tight</span>
+          </button>
+          <button class="emoji-btn" data-value="3" data-target="unstretched" onclick="selectRating(this)">
+            <span class="face">&#x1F610;</span>
+            <span class="label">Normal</span>
+          </button>
+          <button class="emoji-btn" data-value="4" data-target="unstretched" onclick="selectRating(this)">
+            <span class="face">&#x1F642;</span>
+            <span class="label">A bit loose</span>
+          </button>
+          <button class="emoji-btn" data-value="5" data-target="unstretched" onclick="selectRating(this)">
+            <span class="face">&#x1F601;</span>
+            <span class="label">Very loose</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 4: Comparison -->
+      <div id="step-compare" class="card fade-in" style="display:none">
+        <h2>Does the stretched leg feel different?</h2>
+        <div class="compare-buttons" style="margin-top:16px">
+          <button class="compare-btn" data-value="better" onclick="selectComparison(this)">
+            <span class="emoji">&#x1F44D;</span>
+            Yes, it feels better
+          </button>
+          <button class="compare-btn" data-value="same" onclick="selectComparison(this)">
+            <span class="emoji">&#x1F937;</span>
+            About the same
+          </button>
+          <button class="compare-btn" data-value="worse" onclick="selectComparison(this)">
+            <span class="emoji">&#x1F44E;</span>
+            No, it feels worse
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 5: Notes + Save -->
+      <div id="step-save" class="card fade-in" style="display:none">
+        <button class="notes-toggle" id="notes-toggle" onclick="toggleNotes()">+ Add a note (optional)</button>
+        <textarea class="notes-area" id="notes-area" placeholder="Anything you want to remember?"></textarea>
+        <button class="btn-primary" style="margin-top:16px" onclick="saveCheckin()" id="save-btn">
+          &#x2705; Save Check-in
+        </button>
+      </div>
+
+      <!-- Success -->
+      <div id="step-success" class="card success-card fade-in" style="display:none">
+        <div class="big-emoji">&#x1F31F;</div>
+        <h2 id="success-message">Great job!</h2>
+        <p id="success-encourage"></p>
+        <div class="success-summary" id="success-summary"></div>
+        <button class="btn-secondary" style="margin-top:20px" onclick="switchTab('history')">View History</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== HISTORY SCREEN ========== -->
+  <div id="screen-history" class="screen">
+    <div class="header">
+      <h1>History</h1>
+      <p>Your stretcher tracking log</p>
+    </div>
+
+    <button class="pt-summary-btn" onclick="showPTSummary()">
+      &#x1F4CB; Show PT Summary
+    </button>
+
+    <!-- Chart -->
+    <div class="chart-container" id="chart-container" style="display:none">
+      <h3>Trend</h3>
+      <div class="chart-legend">
+        <span><span class="legend-dot" style="background:var(--blue-leg)"></span> Stretched leg</span>
+        <span><span class="legend-dot" style="background:#D1D5DB"></span> Unstretched leg</span>
+      </div>
+      <div id="chart-area"></div>
+    </div>
+
+    <!-- Entry list -->
+    <div id="history-list"></div>
+  </div>
+
+  <!-- ========== SETTINGS SCREEN ========== -->
+  <div id="screen-settings" class="screen">
+    <div class="header">
+      <h1>Settings</h1>
+    </div>
+    <div class="card">
+      <div class="setting-item">
+        <span class="setting-label">Name</span>
+        <input type="text" class="setting-input" id="setting-name" value="Max" onchange="saveName()">
+      </div>
+    </div>
+    <div class="card" style="margin-top:8px">
+      <button class="btn-export" onclick="exportData()">&#x1F4CB; Copy Data to Clipboard</button>
+      <button class="btn-danger" style="margin-top:12px" onclick="confirmClear()">&#x1F5D1; Clear All Data</button>
+    </div>
+    <div class="card" style="margin-top:8px">
+      <h3 style="margin-bottom:8px">For your PT</h3>
+      <p style="font-size:13px; color:var(--text-light); line-height:1.5;">
+        Tap "Show PT Summary" on the History tab to see a full report. It includes average ratings, how many days the stretcher helped, and a chart showing progress over time.
+      </p>
+    </div>
+  </div>
+
+  <!-- ========== PT SUMMARY OVERLAY ========== -->
+  <div id="pt-overlay" class="pt-overlay">
+    <button class="close-btn" onclick="closePTSummary()">&#x2190; Back</button>
+    <div id="pt-content"></div>
+  </div>
+
+  <!-- ========== CLEAR CONFIRM MODAL ========== -->
+  <div id="clear-modal" class="modal-overlay">
+    <div class="modal-box">
+      <h3>Clear All Data?</h3>
+      <p>This will permanently delete all your check-in history. This cannot be undone.</p>
+      <div class="modal-actions">
+        <button class="modal-cancel" onclick="closeClearModal()">Cancel</button>
+        <button class="modal-confirm" onclick="clearAllData()">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== CONFETTI CONTAINER ========== -->
+  <div id="confetti" class="confetti-container"></div>
+
+  <!-- ========== BOTTOM NAV ========== -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-tab="checkin" onclick="switchTab('checkin')">
+      <span>&#x1F4DD;</span>
+      <span class="nav-label">Check-in</span>
+    </button>
+    <button class="nav-btn" data-tab="history" onclick="switchTab('history')">
+      <span>&#x1F4CA;</span>
+      <span class="nav-label">History</span>
+    </button>
+    <button class="nav-btn" data-tab="settings" onclick="switchTab('settings')">
+      <span>&#x2699;&#xFE0F;</span>
+      <span class="nav-label">Settings</span>
+    </button>
+  </nav>
+
+  <script>
+    // ========== DATA LAYER ==========
+    const STORAGE_KEY = 'stretchTracker';
+    const EMOJIS = ['', '\u{1F616}', '\u{1F615}', '\u{1F610}', '\u{1F642}', '\u{1F601}'];
+    const LABELS = ['', 'Very tight', 'A bit tight', 'Normal', 'A bit loose', 'Very loose'];
+    const ENCOURAGEMENTS = [
+      'Great job tracking today!',
+      'You\'re doing awesome!',
+      'Your PT will be impressed!',
+      'Keep it up, champ!',
+      'Nice work staying on top of it!',
+      'Way to be consistent!',
+      'Every day counts!'
+    ];
+
+    function loadData() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) return JSON.parse(raw);
+      } catch(e) {}
+      return { version: 1, userName: 'Max', entries: [] };
+    }
+
+    function saveData(data) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function getToday() {
+      return new Date().toISOString().slice(0, 10);
+    }
+
+    function getTodayEntries() {
+      const data = loadData();
+      const today = getToday();
+      return data.entries.filter(e => e.date === today);
+    }
+
+    function getTodayMorning() {
+      return getTodayEntries().find(e => e.type === 'morning') || null;
+    }
+
+    function getTodayMidday() {
+      return getTodayEntries().find(e => e.type === 'midday') || null;
+    }
+
+    function getLastMorningEntry() {
+      const data = loadData();
+      const mornings = data.entries.filter(e => e.type === 'morning').sort((a, b) => b.date.localeCompare(a.date));
+      return mornings.length > 0 ? mornings[0] : null;
+    }
+
+    function getMorningEntries() {
+      const data = loadData();
+      return data.entries.filter(e => e.type === 'morning').sort((a, b) => a.date.localeCompare(b.date));
+    }
+
+    function getStreak() {
+      const data = loadData();
+      const mornings = data.entries.filter(e => e.type === 'morning').sort((a, b) => b.date.localeCompare(a.date));
+      if (mornings.length === 0) return 0;
+      let streak = 0;
+      let checkDate = new Date();
+      // Include today if logged
+      if (mornings[0].date === getToday()) {
+        streak = 1;
+        checkDate.setDate(checkDate.getDate() - 1);
+      } else {
+        // If not logged today, start from yesterday
+        checkDate.setDate(checkDate.getDate() - 1);
+      }
+      for (let i = mornings[0].date === getToday() ? 1 : 0; i < mornings.length; i++) {
+        const dateStr = checkDate.toISOString().slice(0, 10);
+        if (mornings[i].date === dateStr) {
+          streak++;
+          checkDate.setDate(checkDate.getDate() - 1);
+        } else {
+          break;
+        }
+      }
+      return streak;
+    }
+
+    // ========== CHECK-IN STATE ==========
+    let checkinState = {
+      type: 'morning',
+      step: 0,
+      leg: null,
+      stretchedRating: null,
+      unstretchedRating: null,
+      comparison: null,
+      notes: '',
+      editingId: null
+    };
+
+    const STEPS = ['leg', 'stretched', 'unstretched', 'compare', 'save'];
+    const MIDDAY_STEPS = ['stretched', 'unstretched', 'compare', 'save'];
+
+    function getCurrentSteps() {
+      return checkinState.type === 'midday' ? MIDDAY_STEPS : STEPS;
+    }
+
+    function resetCheckinState() {
+      checkinState = { type: 'morning', step: 0, leg: null, stretchedRating: null, unstretchedRating: null, comparison: null, notes: '', editingId: null };
+    }
+
+    // ========== INIT ==========
+    function init() {
+      const data = loadData();
+      document.getElementById('setting-name').value = data.userName || 'Max';
+      updateGreeting();
+      updateCheckinScreen();
+    }
+
+    function updateGreeting() {
+      const data = loadData();
+      const hour = new Date().getHours();
+      let greeting = 'Good morning';
+      if (hour >= 12 && hour < 17) greeting = 'Good afternoon';
+      else if (hour >= 17) greeting = 'Good evening';
+      const name = data.userName || 'Max';
+      document.getElementById('greeting').textContent = `${greeting}, ${name}!`;
+
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const now = new Date();
+      document.getElementById('checkin-date').textContent = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`;
+    }
+
+    function updateCheckinScreen() {
+      const morning = getTodayMorning();
+      const midday = getTodayMidday();
+
+      // Streak
+      const streak = getStreak();
+      const streakBanner = document.getElementById('streak-banner');
+      if (streak >= 2) {
+        streakBanner.style.display = 'flex';
+        document.getElementById('streak-text').textContent = `${streak} day streak!`;
+      } else {
+        streakBanner.style.display = 'none';
+      }
+
+      // Leg reminder
+      const lastEntry = getLastMorningEntry();
+      const reminderEl = document.getElementById('leg-reminder');
+      if (lastEntry && !morning) {
+        const nextLeg = lastEntry.stretchedLeg === 'left' ? 'RIGHT' : 'LEFT';
+        reminderEl.style.display = 'flex';
+        document.getElementById('reminder-text').textContent = `Last time was ${lastEntry.stretchedLeg.toUpperCase()} leg. Tonight try the ${nextLeg} leg!`;
+      } else {
+        reminderEl.style.display = 'none';
+      }
+
+      const alreadyLogged = document.getElementById('already-logged');
+      const middayLogged = document.getElementById('midday-logged');
+      const form = document.getElementById('checkin-form');
+
+      if (morning && midday) {
+        // Both done
+        alreadyLogged.style.display = 'none';
+        middayLogged.style.display = 'block';
+        form.style.display = 'none';
+      } else if (morning && !midday) {
+        // Morning done, midday available
+        alreadyLogged.style.display = 'block';
+        middayLogged.style.display = 'none';
+        form.style.display = 'none';
+      } else {
+        // Nothing logged yet
+        alreadyLogged.style.display = 'none';
+        middayLogged.style.display = 'none';
+        form.style.display = 'block';
+        startMorningCheckin();
+      }
+    }
+
+    function startMorningCheckin() {
+      resetCheckinState();
+      checkinState.type = 'morning';
+      // Auto-suggest alternating leg
+      const last = getLastMorningEntry();
+      if (last) {
+        checkinState.leg = last.stretchedLeg === 'left' ? 'right' : 'left';
+      }
+      showCheckinStep(0);
+    }
+
+    function startMiddayCheckin() {
+      resetCheckinState();
+      checkinState.type = 'midday';
+      const morning = getTodayMorning();
+      if (morning) {
+        checkinState.leg = morning.stretchedLeg;
+      }
+      document.getElementById('already-logged').style.display = 'none';
+      document.getElementById('checkin-form').style.display = 'block';
+      document.getElementById('checkin-type-display').style.display = 'block';
+      document.getElementById('checkin-type-label').textContent = 'Midday Check-in';
+      showCheckinStep(0);
+    }
+
+    function editMorningCheckin() {
+      const morning = getTodayMorning();
+      if (!morning) return;
+      resetCheckinState();
+      checkinState.type = 'morning';
+      checkinState.editingId = morning.id;
+      checkinState.leg = morning.stretchedLeg;
+      checkinState.stretchedRating = morning.stretchedLegRating;
+      checkinState.unstretchedRating = morning.unstretchedLegRating;
+      checkinState.comparison = morning.comparison;
+      checkinState.notes = morning.notes || '';
+      document.getElementById('already-logged').style.display = 'none';
+      document.getElementById('checkin-form').style.display = 'block';
+      document.getElementById('checkin-type-display').style.display = 'block';
+      document.getElementById('checkin-type-label').textContent = 'Editing Morning Entry';
+      showCheckinStep(0);
+    }
+
+    function showCheckinStep(stepIndex) {
+      const steps = getCurrentSteps();
+      checkinState.step = stepIndex;
+
+      // Update step dots
+      const dotsContainer = document.getElementById('step-dots');
+      dotsContainer.innerHTML = '';
+      steps.forEach((_, i) => {
+        const dot = document.createElement('div');
+        dot.className = 'step-dot' + (i < stepIndex ? ' done' : '') + (i === stepIndex ? ' active' : '');
+        dotsContainer.appendChild(dot);
+      });
+
+      // Hide all steps
+      document.querySelectorAll('[id^="step-"]').forEach(el => el.style.display = 'none');
+
+      const currentStep = steps[stepIndex];
+
+      if (currentStep === 'leg') {
+        document.getElementById('step-leg').style.display = 'block';
+        // Pre-select if editing
+        document.querySelectorAll('.leg-btn').forEach(btn => btn.classList.remove('selected'));
+        if (checkinState.leg) {
+          document.querySelector(`.leg-btn.${checkinState.leg}`).classList.add('selected');
+        }
+      } else if (currentStep === 'stretched') {
+        const legName = checkinState.leg === 'left' ? 'LEFT' : 'RIGHT';
+        document.getElementById('stretched-leg-name').textContent = legName;
+        document.getElementById('step-stretched').style.display = 'block';
+        // Reset selections visually
+        document.querySelectorAll('#step-stretched .emoji-btn').forEach(btn => {
+          btn.classList.remove('selected');
+          if (checkinState.stretchedRating && parseInt(btn.dataset.value) === checkinState.stretchedRating) {
+            btn.classList.add('selected');
+          }
+        });
+      } else if (currentStep === 'unstretched') {
+        const otherLeg = checkinState.leg === 'left' ? 'RIGHT' : 'LEFT';
+        document.getElementById('unstretched-leg-name').textContent = otherLeg;
+        document.getElementById('step-unstretched').style.display = 'block';
+        document.querySelectorAll('#step-unstretched .emoji-btn').forEach(btn => {
+          btn.classList.remove('selected');
+          if (checkinState.unstretchedRating && parseInt(btn.dataset.value) === checkinState.unstretchedRating) {
+            btn.classList.add('selected');
+          }
+        });
+      } else if (currentStep === 'compare') {
+        document.getElementById('step-compare').style.display = 'block';
+        document.querySelectorAll('.compare-btn').forEach(btn => {
+          btn.classList.remove('selected');
+          if (checkinState.comparison && btn.dataset.value === checkinState.comparison) {
+            btn.classList.add('selected');
+          }
+        });
+      } else if (currentStep === 'save') {
+        document.getElementById('step-save').style.display = 'block';
+        document.getElementById('notes-area').value = checkinState.notes;
+        const notesArea = document.getElementById('notes-area');
+        if (checkinState.notes) {
+          notesArea.classList.add('visible');
+          document.getElementById('notes-toggle').textContent = '- Hide note';
+        } else {
+          notesArea.classList.remove('visible');
+          document.getElementById('notes-toggle').textContent = '+ Add a note (optional)';
+        }
+      }
+    }
+
+    function advanceStep() {
+      const steps = getCurrentSteps();
+      if (checkinState.step < steps.length - 1) {
+        showCheckinStep(checkinState.step + 1);
+      }
+    }
+
+    // ========== SELECTION HANDLERS ==========
+    function selectLeg(leg) {
+      checkinState.leg = leg;
+      document.querySelectorAll('.leg-btn').forEach(btn => btn.classList.remove('selected'));
+      document.querySelector(`.leg-btn.${leg}`).classList.add('selected');
+      setTimeout(advanceStep, 200);
+    }
+
+    function selectRating(btn) {
+      const value = parseInt(btn.dataset.value);
+      const target = btn.dataset.target;
+      const parent = btn.closest('.card');
+
+      parent.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+
+      if (target === 'stretched') {
+        checkinState.stretchedRating = value;
+      } else {
+        checkinState.unstretchedRating = value;
+      }
+      setTimeout(advanceStep, 250);
+    }
+
+    function selectComparison(btn) {
+      checkinState.comparison = btn.dataset.value;
+      document.querySelectorAll('.compare-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      setTimeout(advanceStep, 200);
+    }
+
+    function toggleNotes() {
+      const area = document.getElementById('notes-area');
+      const toggle = document.getElementById('notes-toggle');
+      if (area.classList.contains('visible')) {
+        area.classList.remove('visible');
+        toggle.textContent = '+ Add a note (optional)';
+      } else {
+        area.classList.add('visible');
+        toggle.textContent = '- Hide note';
+        area.focus();
+      }
+    }
+
+    // ========== SAVE ==========
+    function saveCheckin() {
+      const notes = document.getElementById('notes-area').value.trim();
+      checkinState.notes = notes;
+
+      const today = getToday();
+      const entry = {
+        id: `${today}-${checkinState.type}`,
+        date: today,
+        type: checkinState.type,
+        timestamp: new Date().toISOString(),
+        stretchedLeg: checkinState.leg,
+        stretchedLegRating: checkinState.stretchedRating,
+        unstretchedLegRating: checkinState.unstretchedRating,
+        comparison: checkinState.comparison,
+        notes: checkinState.notes
+      };
+
+      const data = loadData();
+
+      if (checkinState.editingId) {
+        // Replace existing
+        const idx = data.entries.findIndex(e => e.id === checkinState.editingId);
+        if (idx >= 0) {
+          data.entries[idx] = entry;
+        } else {
+          data.entries.push(entry);
+        }
+      } else {
+        // Remove duplicate if re-saving same type same day
+        data.entries = data.entries.filter(e => e.id !== entry.id);
+        data.entries.push(entry);
+      }
+
+      saveData(data);
+
+      // Show success
+      showSuccess(entry);
+      fireConfetti();
+    }
+
+    function showSuccess(entry) {
+      document.querySelectorAll('[id^="step-"]').forEach(el => el.style.display = 'none');
+      document.getElementById('step-dots').innerHTML = '';
+
+      const msg = ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)];
+      document.getElementById('success-message').textContent = msg;
+      document.getElementById('success-encourage').textContent =
+        checkinState.type === 'midday' ? 'Midday check-in saved!' : 'Morning check-in saved!';
+
+      const legName = entry.stretchedLeg === 'left' ? 'Left' : 'Right';
+      const otherLeg = entry.stretchedLeg === 'left' ? 'Right' : 'Left';
+      const compText = entry.comparison === 'better' ? 'Yes, better' : entry.comparison === 'same' ? 'About the same' : 'No, worse';
+
+      document.getElementById('success-summary').innerHTML = `
+        <div class="row"><span class="label">Stretched leg</span><span>${legName} ${EMOJIS[entry.stretchedLegRating]} ${LABELS[entry.stretchedLegRating]}</span></div>
+        <div class="row"><span class="label">${otherLeg} leg</span><span>${EMOJIS[entry.unstretchedLegRating]} ${LABELS[entry.unstretchedLegRating]}</span></div>
+        <div class="row"><span class="label">Feels different?</span><span>${compText}</span></div>
+        ${entry.notes ? `<div class="row"><span class="label">Note</span><span>${escapeHtml(entry.notes)}</span></div>` : ''}
+      `;
+
+      document.getElementById('step-success').style.display = 'block';
+    }
+
+    function fireConfetti() {
+      const container = document.getElementById('confetti');
+      const colors = ['#FF6B6B', '#FFD93D', '#6BCB77', '#4A90D9', '#A855F7', '#FFA06B'];
+      for (let i = 0; i < 40; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = Math.random() * 100 + '%';
+        piece.style.top = '-10px';
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDelay = Math.random() * 0.5 + 's';
+        piece.style.animationDuration = (1 + Math.random()) + 's';
+        container.appendChild(piece);
+      }
+      setTimeout(() => { container.innerHTML = ''; }, 2500);
+    }
+
+    // ========== NAVIGATION ==========
+    function switchTab(tab) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(`screen-${tab}`).classList.add('active');
+      document.querySelector(`.nav-btn[data-tab="${tab}"]`).classList.add('active');
+
+      if (tab === 'checkin') {
+        updateGreeting();
+        updateCheckinScreen();
+      } else if (tab === 'history') {
+        renderHistory();
+      }
+    }
+
+    // ========== HISTORY ==========
+    function renderHistory() {
+      const data = loadData();
+      const list = document.getElementById('history-list');
+      const chartContainer = document.getElementById('chart-container');
+
+      // Group entries by date, newest first
+      const mornings = data.entries.filter(e => e.type === 'morning').sort((a, b) => b.date.localeCompare(a.date));
+
+      if (mornings.length === 0) {
+        chartContainer.style.display = 'none';
+        list.innerHTML = `
+          <div class="history-empty">
+            <div class="emoji">\u{1F4DD}</div>
+            <h2>No entries yet</h2>
+            <p>Complete your first morning check-in to start tracking!</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Render chart
+      if (mornings.length >= 2) {
+        chartContainer.style.display = 'block';
+        renderChart(mornings.slice().reverse());
+      } else {
+        chartContainer.style.display = 'none';
+      }
+
+      // Render entries
+      list.innerHTML = mornings.map(entry => {
+        const midday = data.entries.find(e => e.type === 'midday' && e.date === entry.date);
+        const dateObj = new Date(entry.date + 'T12:00:00');
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const dateStr = `${days[dateObj.getDay()]}, ${months[dateObj.getMonth()]} ${dateObj.getDate()}`;
+        const legLabel = entry.stretchedLeg === 'left' ? 'Left' : 'Right';
+        const otherLeg = entry.stretchedLeg === 'left' ? 'Right' : 'Left';
+
+        return `
+          <div class="history-entry">
+            <div class="date-row">
+              <span class="date">${dateStr}</span>
+              <span class="leg-chip ${entry.stretchedLeg}">${legLabel} leg stretched</span>
+            </div>
+            <div class="ratings">
+              <div class="rating-item">
+                <span class="type">Stretched (${legLabel})</span>
+                <span class="face">${EMOJIS[entry.stretchedLegRating]}</span>
+                <span class="val">${LABELS[entry.stretchedLegRating]}</span>
+              </div>
+              <div class="rating-item">
+                <span class="type">${otherLeg} leg</span>
+                <span class="face">${EMOJIS[entry.unstretchedLegRating]}</span>
+                <span class="val">${LABELS[entry.unstretchedLegRating]}</span>
+              </div>
+            </div>
+            <span class="compare-badge ${entry.comparison}">${
+              entry.comparison === 'better' ? '\u{1F44D} Feels better' :
+              entry.comparison === 'same' ? '\u{1F937} About the same' :
+              '\u{1F44E} Feels worse'
+            }</span>
+            ${midday ? `<div class="midday-indicator">\u{2600}\uFE0F Midday: Stretched ${EMOJIS[midday.stretchedLegRating]} / Other ${EMOJIS[midday.unstretchedLegRating]} - ${
+              midday.comparison === 'better' ? 'Better' : midday.comparison === 'same' ? 'Same' : 'Worse'
+            }</div>` : ''}
+            ${entry.notes ? `<div class="notes-text">"${escapeHtml(entry.notes)}"</div>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderChart(entries) {
+      const chartArea = document.getElementById('chart-area');
+      const padding = { top: 10, right: 20, bottom: 30, left: 30 };
+      const w = Math.max(300, entries.length * 50 + padding.left + padding.right);
+      const h = 180;
+      const plotW = w - padding.left - padding.right;
+      const plotH = h - padding.top - padding.bottom;
+
+      const xStep = entries.length > 1 ? plotW / (entries.length - 1) : plotW / 2;
+      const yStep = plotH / 4;
+
+      let svg = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="display:block;max-width:100%;">`;
+
+      // Grid lines
+      for (let i = 0; i <= 4; i++) {
+        const y = padding.top + i * yStep;
+        svg += `<line x1="${padding.left}" y1="${y}" x2="${w - padding.right}" y2="${y}" stroke="#F3F4F6" stroke-width="1"/>`;
+      }
+
+      // Y labels
+      const yLabels = ['5', '4', '3', '2', '1'];
+      for (let i = 0; i <= 4; i++) {
+        const y = padding.top + i * yStep;
+        svg += `<text x="${padding.left - 8}" y="${y + 4}" font-size="10" fill="#9CA3AF" text-anchor="end">${yLabels[i]}</text>`;
+      }
+
+      // Points and lines
+      const stretchedPoints = entries.map((e, i) => ({
+        x: padding.left + i * xStep,
+        y: padding.top + (5 - e.stretchedLegRating) * yStep
+      }));
+      const unstretchedPoints = entries.map((e, i) => ({
+        x: padding.left + i * xStep,
+        y: padding.top + (5 - e.unstretchedLegRating) * yStep
+      }));
+
+      // Lines
+      if (entries.length > 1) {
+        svg += `<polyline points="${stretchedPoints.map(p => `${p.x},${p.y}`).join(' ')}" fill="none" stroke="var(--blue-leg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+        svg += `<polyline points="${unstretchedPoints.map(p => `${p.x},${p.y}`).join(' ')}" fill="none" stroke="#D1D5DB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5,4"/>`;
+      }
+
+      // Dots
+      stretchedPoints.forEach(p => {
+        svg += `<circle cx="${p.x}" cy="${p.y}" r="5" fill="var(--blue-leg)"/>`;
+      });
+      unstretchedPoints.forEach(p => {
+        svg += `<circle cx="${p.x}" cy="${p.y}" r="5" fill="#D1D5DB" stroke="white" stroke-width="1.5"/>`;
+      });
+
+      // X labels (dates)
+      entries.forEach((e, i) => {
+        const x = padding.left + i * xStep;
+        const dateObj = new Date(e.date + 'T12:00:00');
+        const days = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+        const label = days[dateObj.getDay()];
+        svg += `<text x="${x}" y="${h - 5}" font-size="10" fill="#9CA3AF" text-anchor="middle">${label}</text>`;
+        // Leg color dot below day
+        const legColor = e.stretchedLeg === 'left' ? 'var(--blue-leg)' : 'var(--green-leg)';
+        svg += `<circle cx="${x}" cy="${h - 18}" r="3" fill="${legColor}"/>`;
+      });
+
+      svg += '</svg>';
+      chartArea.innerHTML = svg;
+    }
+
+    // ========== PT SUMMARY ==========
+    function showPTSummary() {
+      const data = loadData();
+      const mornings = data.entries.filter(e => e.type === 'morning').sort((a, b) => a.date.localeCompare(b.date));
+
+      if (mornings.length === 0) {
+        document.getElementById('pt-content').innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-light);"><p>No data to show yet.</p></div>';
+        document.getElementById('pt-overlay').classList.add('active');
+        return;
+      }
+
+      const name = data.userName || 'Max';
+      const firstDate = formatDateLong(mornings[0].date);
+      const lastDate = formatDateLong(mornings[mornings.length - 1].date);
+      const totalDays = mornings.length;
+
+      const avgStretched = (mornings.reduce((s, e) => s + e.stretchedLegRating, 0) / totalDays).toFixed(1);
+      const avgUnstretched = (mornings.reduce((s, e) => s + e.unstretchedLegRating, 0) / totalDays).toFixed(1);
+      const betterDays = mornings.filter(e => e.comparison === 'better').length;
+      const sameDays = mornings.filter(e => e.comparison === 'same').length;
+      const worseDays = mornings.filter(e => e.comparison === 'worse').length;
+      const betterPct = Math.round((betterDays / totalDays) * 100);
+
+      let html = `
+        <h1 style="font-size:22px;margin-bottom:4px;">Stretch Tracker Report</h1>
+        <p style="color:var(--text-light);font-size:14px;margin-bottom:20px;">For ${escapeHtml(name)} | ${firstDate} - ${lastDate}</p>
+
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="value">${totalDays}</div>
+            <div class="label">Days Tracked</div>
+          </div>
+          <div class="stat-box highlight">
+            <div class="value">${betterPct}%</div>
+            <div class="label">Days Felt Better</div>
+          </div>
+          <div class="stat-box">
+            <div class="value">${avgStretched}</div>
+            <div class="label">Avg Stretched Rating</div>
+          </div>
+          <div class="stat-box">
+            <div class="value">${avgUnstretched}</div>
+            <div class="label">Avg Unstretched Rating</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:16px">
+          <h3>Comparison Breakdown</h3>
+          <div style="margin-top:8px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <span style="font-size:14px">\u{1F44D} Felt better:</span>
+              <strong>${betterDays} day${betterDays !== 1 ? 's' : ''}</strong>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <span style="font-size:14px">\u{1F937} About the same:</span>
+              <strong>${sameDays} day${sameDays !== 1 ? 's' : ''}</strong>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:14px">\u{1F44E} Felt worse:</span>
+              <strong>${worseDays} day${worseDays !== 1 ? 's' : ''}</strong>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Chart
+      if (mornings.length >= 2) {
+        html += `<div class="card" style="margin-bottom:16px"><h3>Trend</h3>
+          <div class="chart-legend">
+            <span><span class="legend-dot" style="background:var(--blue-leg)"></span> Stretched</span>
+            <span><span class="legend-dot" style="background:#D1D5DB"></span> Unstretched</span>
+          </div>
+          <div id="pt-chart-area"></div>
+        </div>`;
+      }
+
+      // Table
+      html += `
+        <div class="card">
+          <h3>Full Log</h3>
+          <div style="overflow-x:auto">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Leg</th>
+                  <th>Str.</th>
+                  <th>Other</th>
+                  <th>Result</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${mornings.map(e => {
+                  const dateObj = new Date(e.date + 'T12:00:00');
+                  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                  const d = `${months[dateObj.getMonth()]} ${dateObj.getDate()}`;
+                  const leg = e.stretchedLeg === 'left' ? 'L' : 'R';
+                  const comp = e.comparison === 'better' ? '\u{1F44D}' : e.comparison === 'same' ? '\u{1F937}' : '\u{1F44E}';
+                  return `<tr><td>${d}</td><td>${leg}</td><td>${EMOJIS[e.stretchedLegRating]}</td><td>${EMOJIS[e.unstretchedLegRating]}</td><td>${comp}</td></tr>`;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+
+      // Notes
+      const withNotes = mornings.filter(e => e.notes);
+      if (withNotes.length > 0) {
+        html += `
+          <div class="card" style="margin-top:16px">
+            <h3>Notes</h3>
+            ${withNotes.map(e => {
+              const dateObj = new Date(e.date + 'T12:00:00');
+              const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+              const d = `${months[dateObj.getMonth()]} ${dateObj.getDate()}`;
+              return `<p style="font-size:13px;margin-top:8px"><strong>${d}:</strong> ${escapeHtml(e.notes)}</p>`;
+            }).join('')}
+          </div>
+        `;
+      }
+
+      document.getElementById('pt-content').innerHTML = html;
+      document.getElementById('pt-overlay').classList.add('active');
+
+      // Render chart in PT summary if needed
+      if (mornings.length >= 2) {
+        const ptChartArea = document.getElementById('pt-chart-area');
+        if (ptChartArea) {
+          const tmpChartArea = document.getElementById('chart-area');
+          const original = tmpChartArea ? tmpChartArea.innerHTML : '';
+          renderChart(mornings);
+          ptChartArea.innerHTML = document.getElementById('chart-area').innerHTML;
+          if (original) document.getElementById('chart-area').innerHTML = original;
+        }
+      }
+    }
+
+    function closePTSummary() {
+      document.getElementById('pt-overlay').classList.remove('active');
+    }
+
+    // ========== SETTINGS ==========
+    function saveName() {
+      const data = loadData();
+      data.userName = document.getElementById('setting-name').value.trim() || 'Max';
+      saveData(data);
+    }
+
+    function exportData() {
+      const data = loadData();
+      const json = JSON.stringify(data, null, 2);
+      navigator.clipboard.writeText(json).then(() => {
+        alert('Data copied to clipboard!');
+      }).catch(() => {
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = json;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        alert('Data copied to clipboard!');
+      });
+    }
+
+    function confirmClear() {
+      document.getElementById('clear-modal').classList.add('active');
+    }
+
+    function closeClearModal() {
+      document.getElementById('clear-modal').classList.remove('active');
+    }
+
+    function clearAllData() {
+      localStorage.removeItem(STORAGE_KEY);
+      closeClearModal();
+      alert('All data cleared.');
+      switchTab('checkin');
+    }
+
+    // ========== UTILS ==========
+    function escapeHtml(str) {
+      const d = document.createElement('div');
+      d.textContent = str;
+      return d.innerHTML;
+    }
+
+    function formatDateLong(dateStr) {
+      const d = new Date(dateStr + 'T12:00:00');
+      const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+    }
+
+    // ========== PWA REGISTRATION ==========
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+
+    // ========== STARTUP ==========
+    init();
+  </script>
+</body>
+</html>
