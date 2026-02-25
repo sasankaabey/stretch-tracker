@@ -42,16 +42,13 @@
       overflow-x: hidden;
     }
 
-    /* Screens */
     .screen { display: none; padding: 20px 16px calc(var(--nav-height) + 16px); min-height: 100vh; min-height: 100dvh; }
     .screen.active { display: block; }
 
-    /* Header */
     .header { padding: 12px 0 8px; }
     .header h1 { font-size: 28px; font-weight: 700; }
     .header p { font-size: 15px; color: var(--text-light); margin-top: 2px; }
 
-    /* Cards */
     .card {
       background: var(--card);
       border-radius: var(--radius);
@@ -62,22 +59,11 @@
     .card h2 { font-size: 17px; font-weight: 600; margin-bottom: 14px; }
     .card h3 { font-size: 15px; font-weight: 600; margin-bottom: 10px; color: var(--text-light); }
 
-    /* Leg selection buttons */
     .leg-buttons { display: flex; gap: 12px; }
     .leg-btn {
-      flex: 1;
-      min-height: 100px;
-      border-radius: var(--radius);
-      border: 3px solid transparent;
-      font-size: 18px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
+      flex: 1; min-height: 100px; border-radius: var(--radius); border: 3px solid transparent;
+      font-size: 18px; font-weight: 700; cursor: pointer; transition: all 0.15s ease;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
     }
     .leg-btn .emoji { font-size: 36px; }
     .leg-btn.left { background: var(--blue-leg-light); color: var(--blue-leg); }
@@ -86,471 +72,210 @@
     .leg-btn.left.selected { border-color: var(--blue-leg); box-shadow: 0 4px 12px rgba(74,144,217,0.25); }
     .leg-btn.right.selected { border-color: var(--green-leg); box-shadow: 0 4px 12px rgba(107,203,119,0.25); }
 
-    /* Emoji rating */
     .emoji-row { display: flex; justify-content: center; gap: 8px; }
     .emoji-btn {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      width: 64px;
-      padding: 10px 4px;
-      border-radius: 14px;
-      border: 3px solid transparent;
-      background: var(--card);
-      cursor: pointer;
-      transition: all 0.15s ease;
-      opacity: 0.5;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      width: 64px; padding: 10px 4px; border-radius: 14px; border: 3px solid transparent;
+      background: var(--card); cursor: pointer; transition: all 0.15s ease; opacity: 0.5;
     }
     .emoji-btn .face { font-size: 32px; line-height: 1.2; }
     .emoji-btn .label { font-size: 10px; font-weight: 600; color: var(--text-light); text-align: center; line-height: 1.2; }
-    .emoji-btn.selected {
-      opacity: 1;
-      transform: scale(1.12);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
+    .emoji-btn.selected { opacity: 1; transform: scale(1.12); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     .emoji-btn[data-value="1"].selected { border-color: var(--red); background: #FFF0F0; }
     .emoji-btn[data-value="2"].selected { border-color: var(--orange); background: #FFF5EE; }
     .emoji-btn[data-value="3"].selected { border-color: var(--yellow); background: #FFFCE8; }
     .emoji-btn[data-value="4"].selected { border-color: var(--light-green); background: #F4FFEE; }
     .emoji-btn[data-value="5"].selected { border-color: var(--green); background: #EEFFF2; }
 
-    /* Leg badge */
+    /* Pain rating colors (warm to hot) */
+    #pain-rating-row .emoji-btn[data-value="1"].selected { border-color: #FCD34D; background: #FFFCE8; }
+    #pain-rating-row .emoji-btn[data-value="2"].selected { border-color: var(--orange); background: #FFF5EE; }
+    #pain-rating-row .emoji-btn[data-value="3"].selected { border-color: #F97316; background: #FFF0E0; }
+    #pain-rating-row .emoji-btn[data-value="4"].selected { border-color: var(--red); background: #FFF0F0; }
+    #pain-rating-row .emoji-btn[data-value="5"].selected { border-color: #DC2626; background: #FEE2E2; }
+
     .leg-badge {
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 700;
-      margin-left: 6px;
-      vertical-align: middle;
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 12px; font-weight: 700; margin-left: 6px; vertical-align: middle;
     }
     .leg-badge.stretched { background: #DBEAFE; color: #2563EB; }
     .leg-badge.unstretched { background: #F3F4F6; color: #6B7280; }
 
-    /* Comparison buttons */
     .compare-buttons { display: flex; flex-direction: column; gap: 10px; }
     .compare-btn {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 16px 20px;
-      border-radius: var(--radius);
-      border: 2px solid #E5E7EB;
-      background: var(--card);
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s ease;
+      display: flex; align-items: center; gap: 12px; padding: 16px 20px;
+      border-radius: var(--radius); border: 2px solid #E5E7EB; background: var(--card);
+      font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.15s ease;
     }
     .compare-btn .emoji { font-size: 24px; }
     .compare-btn.selected { transform: scale(1.02); }
-    .compare-btn[data-value="better"].selected { border-color: var(--green); background: #EEFFF2; }
+    .compare-btn[data-value="better"].selected, .compare-btn[data-value="no"].selected { border-color: var(--green); background: #EEFFF2; }
     .compare-btn[data-value="same"].selected { border-color: #9CA3AF; background: #F9FAFB; }
-    .compare-btn[data-value="worse"].selected { border-color: var(--orange); background: #FFF5EE; }
+    .compare-btn[data-value="worse"].selected, .compare-btn[data-value="yes"].selected { border-color: var(--orange); background: #FFF5EE; }
 
-    /* Notes toggle */
-    .notes-toggle {
-      font-size: 14px;
-      color: var(--blue-leg);
-      cursor: pointer;
-      font-weight: 600;
-      background: none;
-      border: none;
-      padding: 8px 0;
-    }
+    .notes-toggle { font-size: 14px; color: var(--blue-leg); cursor: pointer; font-weight: 600; background: none; border: none; padding: 8px 0; }
     .notes-area {
-      width: 100%;
-      min-height: 80px;
-      border-radius: 12px;
-      border: 2px solid #E5E7EB;
-      padding: 12px;
-      font-size: 15px;
-      font-family: inherit;
-      resize: vertical;
-      margin-top: 8px;
-      display: none;
+      width: 100%; min-height: 80px; border-radius: 12px; border: 2px solid #E5E7EB;
+      padding: 12px; font-size: 15px; font-family: inherit; resize: vertical; margin-top: 8px; display: none;
     }
     .notes-area.visible { display: block; }
 
-    /* Primary button */
     .btn-primary {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      padding: 18px;
-      border-radius: var(--radius);
-      border: none;
-      background: var(--blue-leg);
-      color: white;
-      font-size: 18px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.15s ease;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 18px; border-radius: var(--radius); border: none;
+      background: var(--blue-leg); color: white; font-size: 18px; font-weight: 700;
+      cursor: pointer; transition: all 0.15s ease;
     }
     .btn-primary:active { transform: scale(0.97); }
     .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* Success screen */
-    .success-card {
-      text-align: center;
-      padding: 40px 20px;
-    }
+    .success-card { text-align: center; padding: 40px 20px; }
     .success-card .big-emoji { font-size: 64px; margin-bottom: 16px; }
     .success-card h2 { font-size: 24px; margin-bottom: 8px; }
     .success-card p { color: var(--text-light); font-size: 15px; margin-bottom: 8px; }
     .success-summary { text-align: left; margin-top: 20px; }
     .success-summary .row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid #F3F4F6;
-      font-size: 15px;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0; border-bottom: 1px solid #F3F4F6; font-size: 15px;
     }
     .success-summary .row:last-child { border-bottom: none; }
     .success-summary .label { color: var(--text-light); }
 
-    /* Reminder banner */
     .reminder {
-      background: linear-gradient(135deg, #E3F0FF, #E8F8E0);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 14px;
-      font-weight: 500;
+      background: linear-gradient(135deg, #E3F0FF, #E8F8E0); border-radius: var(--radius);
+      padding: 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 12px;
+      font-size: 14px; font-weight: 500;
     }
     .reminder .emoji { font-size: 24px; }
 
-    /* Already logged banner */
-    .already-logged {
-      text-align: center;
-      padding: 30px 20px;
-    }
+    .already-logged { text-align: center; padding: 30px 20px; }
     .already-logged .emoji { font-size: 48px; margin-bottom: 12px; }
     .already-logged h2 { font-size: 20px; margin-bottom: 6px; }
     .already-logged p { color: var(--text-light); font-size: 14px; }
     .btn-secondary {
-      display: inline-block;
-      padding: 12px 24px;
-      border-radius: var(--radius);
-      border: 2px solid var(--blue-leg);
-      background: transparent;
-      color: var(--blue-leg);
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 16px;
+      display: inline-block; padding: 12px 24px; border-radius: var(--radius);
+      border: 2px solid var(--blue-leg); background: transparent; color: var(--blue-leg);
+      font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 16px;
     }
 
-    /* History cards */
     .history-entry {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 12px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      background: var(--card); border-radius: var(--radius); padding: 16px;
+      margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
-    .history-entry .date-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
+    .history-entry .date-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     .history-entry .date { font-weight: 700; font-size: 15px; }
-    .history-entry .leg-chip {
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 700;
-    }
+    .history-entry .leg-chip { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
     .leg-chip.left { background: var(--blue-leg-light); color: var(--blue-leg); }
     .leg-chip.right { background: var(--green-leg-light); color: var(--green-leg); }
-    .history-entry .ratings {
-      display: flex;
-      gap: 16px;
-      margin-bottom: 8px;
-    }
-    .history-entry .rating-item {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-    }
+    .history-entry .ratings { display: flex; gap: 16px; margin-bottom: 8px; }
+    .history-entry .rating-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; }
     .history-entry .rating-item .type { font-size: 11px; color: var(--text-light); font-weight: 600; }
     .history-entry .rating-item .face { font-size: 28px; }
     .history-entry .rating-item .val { font-size: 11px; color: var(--text-light); }
-    .compare-badge {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-    }
+    .compare-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
     .compare-badge.better { background: #EEFFF2; color: #16A34A; }
     .compare-badge.same { background: #F3F4F6; color: #6B7280; }
     .compare-badge.worse { background: #FFF5EE; color: #EA580C; }
-    .midday-indicator {
-      font-size: 11px;
-      color: var(--text-light);
-      margin-top: 6px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .history-entry .notes-text {
-      font-size: 13px;
-      color: var(--text-light);
-      margin-top: 6px;
-      font-style: italic;
-    }
-    .history-empty {
-      text-align: center;
-      padding: 40px 20px;
-      color: var(--text-light);
-    }
+    .pain-indicator { font-size: 13px; color: var(--red); margin-top: 6px; }
+    .midday-indicator { font-size: 11px; color: var(--text-light); margin-top: 6px; display: flex; align-items: center; gap: 4px; }
+    .history-entry .notes-text { font-size: 13px; color: var(--text-light); margin-top: 6px; font-style: italic; }
+    .history-empty { text-align: center; padding: 40px 20px; color: var(--text-light); }
     .history-empty .emoji { font-size: 48px; margin-bottom: 12px; }
 
-    /* PT Summary */
     .pt-summary-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      padding: 14px;
-      border-radius: var(--radius);
-      border: 2px solid var(--blue-leg);
-      background: transparent;
-      color: var(--blue-leg);
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-bottom: 16px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 14px; border-radius: var(--radius);
+      border: 2px solid var(--blue-leg); background: transparent; color: var(--blue-leg);
+      font-size: 15px; font-weight: 600; cursor: pointer; margin-bottom: 10px;
+    }
+    .share-btn-row { display: flex; gap: 10px; margin-bottom: 16px; }
+    .share-btn-row button {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 12px 8px; border-radius: var(--radius); border: 2px solid #E5E7EB;
+      background: var(--card); font-size: 14px; font-weight: 600; cursor: pointer;
+      color: var(--text);
     }
     .pt-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: var(--bg);
-      z-index: 200;
-      overflow-y: auto;
-      padding: 20px 16px;
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--bg); z-index: 200; overflow-y: auto; padding: 20px 16px;
     }
     .pt-overlay.active { display: block; }
     .pt-overlay .close-btn {
-      position: sticky;
-      top: 0;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--card);
-      border: none;
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--blue-leg);
-      cursor: pointer;
-      padding: 10px 0;
-      margin-bottom: 12px;
-      z-index: 10;
+      position: sticky; top: 0; display: flex; align-items: center; gap: 6px;
+      background: var(--card); border: none; font-size: 15px; font-weight: 600;
+      color: var(--blue-leg); cursor: pointer; padding: 10px 0; margin-bottom: 12px; z-index: 10;
     }
-    .stat-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-    .stat-box {
-      background: var(--card);
-      border-radius: 12px;
-      padding: 16px;
-      text-align: center;
-    }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .stat-box { background: var(--card); border-radius: 12px; padding: 16px; text-align: center; }
     .stat-box .value { font-size: 28px; font-weight: 800; }
     .stat-box .label { font-size: 12px; color: var(--text-light); margin-top: 4px; }
     .stat-box.highlight { background: #EEFFF2; }
     .stat-box.highlight .value { color: #16A34A; }
+    .stat-box.warn { background: #FFF5EE; }
+    .stat-box.warn .value { color: #EA580C; }
 
-    /* Chart container */
     .chart-container {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 16px;
-      overflow-x: auto;
+      background: var(--card); border-radius: var(--radius); padding: 16px;
+      margin-bottom: 16px; overflow-x: auto;
     }
     .chart-container h3 { margin-bottom: 12px; }
-    .chart-legend {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      margin-bottom: 8px;
-      font-size: 12px;
-      font-weight: 600;
-    }
+    .chart-legend { display: flex; gap: 16px; justify-content: center; margin-bottom: 8px; font-size: 12px; font-weight: 600; flex-wrap: wrap; }
     .chart-legend span { display: flex; align-items: center; gap: 4px; }
-    .legend-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      display: inline-block;
-    }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
 
-    /* Data table */
-    .data-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
-    .data-table th {
-      text-align: left;
-      padding: 8px 6px;
-      border-bottom: 2px solid #E5E7EB;
-      font-weight: 700;
-      color: var(--text-light);
-      font-size: 11px;
-      text-transform: uppercase;
-    }
-    .data-table td {
-      padding: 8px 6px;
-      border-bottom: 1px solid #F3F4F6;
-    }
+    .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .data-table th { text-align: left; padding: 8px 6px; border-bottom: 2px solid #E5E7EB; font-weight: 700; color: var(--text-light); font-size: 11px; text-transform: uppercase; }
+    .data-table td { padding: 8px 6px; border-bottom: 1px solid #F3F4F6; }
 
-    /* Streak */
     .streak-banner {
-      background: linear-gradient(135deg, #FFF7E0, #FFEDD5);
-      border-radius: var(--radius);
-      padding: 14px 16px;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 15px;
-      font-weight: 600;
+      background: linear-gradient(135deg, #FFF7E0, #FFEDD5); border-radius: var(--radius);
+      padding: 14px 16px; margin-bottom: 16px; display: flex; align-items: center;
+      gap: 10px; font-size: 15px; font-weight: 600;
     }
     .streak-banner .emoji { font-size: 24px; }
 
-    /* Settings */
-    .setting-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 0;
-      border-bottom: 1px solid #F3F4F6;
-    }
+    .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid #F3F4F6; }
     .setting-item:last-child { border-bottom: none; }
     .setting-label { font-weight: 600; }
+    .setting-value { font-size: 14px; color: var(--text-light); }
     .setting-input {
-      border: 2px solid #E5E7EB;
-      border-radius: 10px;
-      padding: 8px 12px;
-      font-size: 15px;
-      font-family: inherit;
-      width: 140px;
-      text-align: right;
+      border: 2px solid #E5E7EB; border-radius: 10px; padding: 8px 12px;
+      font-size: 15px; font-family: inherit; width: 140px; text-align: right;
     }
+    .setting-input.wide { width: 100%; text-align: left; margin-top: 8px; font-size: 13px; }
     .btn-danger {
-      width: 100%;
-      padding: 14px;
-      border-radius: var(--radius);
-      border: 2px solid var(--red);
-      background: transparent;
-      color: var(--red);
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 8px;
+      width: 100%; padding: 14px; border-radius: var(--radius); border: 2px solid var(--red);
+      background: transparent; color: var(--red); font-size: 15px; font-weight: 600;
+      cursor: pointer; margin-top: 8px;
     }
     .btn-export {
-      width: 100%;
-      padding: 14px;
-      border-radius: var(--radius);
-      border: 2px solid var(--blue-leg);
-      background: transparent;
-      color: var(--blue-leg);
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
+      width: 100%; padding: 14px; border-radius: var(--radius); border: 2px solid var(--blue-leg);
+      background: transparent; color: var(--blue-leg); font-size: 15px; font-weight: 600; cursor: pointer;
     }
 
-    /* Bottom nav */
     .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      justify-content: space-around;
-      background: var(--card);
-      border-top: 1px solid #E5E7EB;
-      padding: 6px 0 calc(6px + env(safe-area-inset-bottom, 0px));
-      z-index: 100;
+      position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around;
+      background: var(--card); border-top: 1px solid #E5E7EB;
+      padding: 6px 0 calc(6px + env(safe-area-inset-bottom, 0px)); z-index: 100;
     }
     .nav-btn {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      font-size: 22px;
-      min-width: 72px;
-      min-height: 48px;
-      padding: 6px 0;
-      background: none;
-      border: none;
-      color: var(--text-light);
-      cursor: pointer;
-      transition: color 0.15s;
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      font-size: 22px; min-width: 72px; min-height: 48px; padding: 6px 0;
+      background: none; border: none; color: var(--text-light); cursor: pointer; transition: color 0.15s;
     }
     .nav-btn .nav-label { font-size: 11px; font-weight: 600; }
     .nav-btn.active { color: var(--blue-leg); }
 
-    /* Confetti */
-    .confetti-container {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      pointer-events: none;
-      z-index: 300;
-      overflow: hidden;
-    }
-    .confetti-piece {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      border-radius: 2px;
-      animation: confetti-fall 1.5s ease-out forwards;
-    }
-    @keyframes confetti-fall {
-      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-    }
+    .confetti-container { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 300; overflow: hidden; }
+    .confetti-piece { position: absolute; width: 10px; height: 10px; border-radius: 2px; animation: confetti-fall 1.5s ease-out forwards; }
+    @keyframes confetti-fall { 0% { transform: translateY(-20px) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
 
-    /* Confirm modal */
     .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.4);
-      z-index: 250;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4); z-index: 250; align-items: center; justify-content: center; padding: 20px;
     }
     .modal-overlay.active { display: flex; }
-    .modal-box {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 24px;
-      width: 100%;
-      max-width: 320px;
-      text-align: center;
-    }
+    .modal-box { background: var(--card); border-radius: var(--radius); padding: 24px; width: 100%; max-width: 320px; text-align: center; }
     .modal-box h3 { margin-bottom: 8px; }
     .modal-box p { color: var(--text-light); font-size: 14px; margin-bottom: 20px; }
     .modal-actions { display: flex; gap: 12px; }
@@ -558,43 +283,25 @@
     .modal-cancel { border: 2px solid #E5E7EB; background: transparent; color: var(--text); }
     .modal-confirm { border: none; background: var(--red); color: white; }
 
-    /* Step indicators */
     .steps { display: flex; gap: 6px; margin-bottom: 20px; }
-    .step-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #E5E7EB;
-      transition: background 0.2s;
-    }
+    .step-dot { width: 8px; height: 8px; border-radius: 50%; background: #E5E7EB; transition: background 0.2s; }
     .step-dot.active { background: var(--blue-leg); }
     .step-dot.done { background: var(--green); }
 
-    /* Checkin type toggle */
-    .checkin-toggle {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-    .toggle-btn {
-      flex: 1;
-      padding: 10px;
-      border-radius: 12px;
-      border: 2px solid #E5E7EB;
-      background: var(--card);
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      text-align: center;
-    }
-    .toggle-btn.active { border-color: var(--blue-leg); color: var(--blue-leg); background: #EEF4FF; }
-
-    /* Fade in */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     .fade-in { animation: fadeIn 0.25s ease forwards; }
+
+    /* Sync status */
+    .sync-status { font-size: 12px; color: var(--text-light); text-align: center; margin-top: 8px; }
+    .sync-status.success { color: var(--green); }
+    .sync-status.error { color: var(--red); }
+
+    /* Shared/read-only view */
+    .shared-view { padding: 20px 16px; min-height: 100vh; min-height: 100dvh; }
+    .shared-header { text-align: center; margin-bottom: 20px; }
+    .shared-header h1 { font-size: 22px; }
+    .shared-header p { font-size: 14px; color: var(--text-light); margin-top: 4px; }
+    .shared-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; background: #EEF4FF; color: var(--blue-leg); font-size: 12px; font-weight: 600; margin-top: 8px; }
   </style>
 </head>
 <body>
@@ -606,19 +313,16 @@
       <p id="checkin-date"></p>
     </div>
 
-    <!-- Streak banner -->
     <div id="streak-banner" class="streak-banner" style="display:none">
       <span class="emoji">&#x1F525;</span>
       <span id="streak-text"></span>
     </div>
 
-    <!-- Reminder for which leg tonight -->
     <div id="leg-reminder" class="reminder" style="display:none">
       <span class="emoji">&#x1F4A1;</span>
       <span id="reminder-text"></span>
     </div>
 
-    <!-- Already logged state -->
     <div id="already-logged" class="already-logged card" style="display:none">
       <div class="emoji">&#x2705;</div>
       <h2>Already logged today!</h2>
@@ -628,24 +332,20 @@
       <button class="btn-secondary" style="margin-top:8px" onclick="editMorningCheckin()">Edit Morning Entry</button>
     </div>
 
-    <!-- Midday already logged -->
     <div id="midday-logged" style="display:none; text-align:center; padding:20px" class="card">
       <div style="font-size:48px; margin-bottom:12px">&#x1F389;</div>
       <h2>All logged for today!</h2>
       <p style="color:var(--text-light); font-size:14px">Morning and midday check-ins saved. Check your History tab to see your progress.</p>
     </div>
 
-    <!-- Checkin form steps -->
     <div id="checkin-form" style="display:none">
-      <!-- Type toggle (morning/midday) -->
       <div id="checkin-type-display" style="display:none; margin-bottom:12px">
         <span id="checkin-type-label" style="font-size:13px; font-weight:600; color:var(--blue-leg); background:var(--blue-leg-light); padding:4px 12px; border-radius:20px;"></span>
       </div>
 
-      <!-- Step dots -->
       <div class="steps" id="step-dots"></div>
 
-      <!-- Step 1: Which leg -->
+      <!-- Step: Which leg -->
       <div id="step-leg" class="card fade-in" style="display:none">
         <h2>Which leg wore the stretcher?</h2>
         <div class="leg-buttons" style="margin-top:16px">
@@ -660,84 +360,71 @@
         </div>
       </div>
 
-      <!-- Step 2: Rate stretched leg -->
+      <!-- Step: Rate stretched leg -->
       <div id="step-stretched" class="card fade-in" style="display:none">
         <h2>How does your <span id="stretched-leg-name"></span> leg feel?
           <span class="leg-badge stretched">Stretched</span>
         </h2>
         <div class="emoji-row" style="margin-top:16px">
-          <button class="emoji-btn" data-value="1" data-target="stretched" onclick="selectRating(this)">
-            <span class="face">&#x1F616;</span>
-            <span class="label">Very tight</span>
-          </button>
-          <button class="emoji-btn" data-value="2" data-target="stretched" onclick="selectRating(this)">
-            <span class="face">&#x1F615;</span>
-            <span class="label">A bit tight</span>
-          </button>
-          <button class="emoji-btn" data-value="3" data-target="stretched" onclick="selectRating(this)">
-            <span class="face">&#x1F610;</span>
-            <span class="label">Normal</span>
-          </button>
-          <button class="emoji-btn" data-value="4" data-target="stretched" onclick="selectRating(this)">
-            <span class="face">&#x1F642;</span>
-            <span class="label">A bit loose</span>
-          </button>
-          <button class="emoji-btn" data-value="5" data-target="stretched" onclick="selectRating(this)">
-            <span class="face">&#x1F601;</span>
-            <span class="label">Very loose</span>
-          </button>
+          <button class="emoji-btn" data-value="1" data-target="stretched" onclick="selectRating(this)"><span class="face">&#x1F616;</span><span class="label">Very tight</span></button>
+          <button class="emoji-btn" data-value="2" data-target="stretched" onclick="selectRating(this)"><span class="face">&#x1F615;</span><span class="label">A bit tight</span></button>
+          <button class="emoji-btn" data-value="3" data-target="stretched" onclick="selectRating(this)"><span class="face">&#x1F610;</span><span class="label">Normal</span></button>
+          <button class="emoji-btn" data-value="4" data-target="stretched" onclick="selectRating(this)"><span class="face">&#x1F642;</span><span class="label">A bit loose</span></button>
+          <button class="emoji-btn" data-value="5" data-target="stretched" onclick="selectRating(this)"><span class="face">&#x1F601;</span><span class="label">Very loose</span></button>
         </div>
       </div>
 
-      <!-- Step 3: Rate unstretched leg -->
+      <!-- Step: Rate unstretched leg -->
       <div id="step-unstretched" class="card fade-in" style="display:none">
         <h2>How does your <span id="unstretched-leg-name"></span> leg feel?
           <span class="leg-badge unstretched">No stretcher</span>
         </h2>
         <div class="emoji-row" style="margin-top:16px">
-          <button class="emoji-btn" data-value="1" data-target="unstretched" onclick="selectRating(this)">
-            <span class="face">&#x1F616;</span>
-            <span class="label">Very tight</span>
-          </button>
-          <button class="emoji-btn" data-value="2" data-target="unstretched" onclick="selectRating(this)">
-            <span class="face">&#x1F615;</span>
-            <span class="label">A bit tight</span>
-          </button>
-          <button class="emoji-btn" data-value="3" data-target="unstretched" onclick="selectRating(this)">
-            <span class="face">&#x1F610;</span>
-            <span class="label">Normal</span>
-          </button>
-          <button class="emoji-btn" data-value="4" data-target="unstretched" onclick="selectRating(this)">
-            <span class="face">&#x1F642;</span>
-            <span class="label">A bit loose</span>
-          </button>
-          <button class="emoji-btn" data-value="5" data-target="unstretched" onclick="selectRating(this)">
-            <span class="face">&#x1F601;</span>
-            <span class="label">Very loose</span>
-          </button>
+          <button class="emoji-btn" data-value="1" data-target="unstretched" onclick="selectRating(this)"><span class="face">&#x1F616;</span><span class="label">Very tight</span></button>
+          <button class="emoji-btn" data-value="2" data-target="unstretched" onclick="selectRating(this)"><span class="face">&#x1F615;</span><span class="label">A bit tight</span></button>
+          <button class="emoji-btn" data-value="3" data-target="unstretched" onclick="selectRating(this)"><span class="face">&#x1F610;</span><span class="label">Normal</span></button>
+          <button class="emoji-btn" data-value="4" data-target="unstretched" onclick="selectRating(this)"><span class="face">&#x1F642;</span><span class="label">A bit loose</span></button>
+          <button class="emoji-btn" data-value="5" data-target="unstretched" onclick="selectRating(this)"><span class="face">&#x1F601;</span><span class="label">Very loose</span></button>
         </div>
       </div>
 
-      <!-- Step 4: Comparison -->
+      <!-- Step: Comparison -->
       <div id="step-compare" class="card fade-in" style="display:none">
         <h2>Does the stretched leg feel different?</h2>
         <div class="compare-buttons" style="margin-top:16px">
-          <button class="compare-btn" data-value="better" onclick="selectComparison(this)">
-            <span class="emoji">&#x1F44D;</span>
-            Yes, it feels better
-          </button>
-          <button class="compare-btn" data-value="same" onclick="selectComparison(this)">
-            <span class="emoji">&#x1F937;</span>
-            About the same
-          </button>
-          <button class="compare-btn" data-value="worse" onclick="selectComparison(this)">
-            <span class="emoji">&#x1F44E;</span>
-            No, it feels worse
-          </button>
+          <button class="compare-btn" data-value="better" onclick="selectComparison(this)"><span class="emoji">&#x1F44D;</span>Yes, it feels better</button>
+          <button class="compare-btn" data-value="same" onclick="selectComparison(this)"><span class="emoji">&#x1F937;</span>About the same</button>
+          <button class="compare-btn" data-value="worse" onclick="selectComparison(this)"><span class="emoji">&#x1F44E;</span>No, it feels worse</button>
         </div>
       </div>
 
-      <!-- Step 5: Notes + Save -->
+      <!-- Step: Pain -->
+      <div id="step-pain" class="card fade-in" style="display:none">
+        <h2>Did anything hurt?</h2>
+        <p style="font-size:14px; color:var(--text-light); margin-bottom:16px">
+          It's OK either way &#x2014; this helps your PT know how you're doing
+        </p>
+        <div class="compare-buttons" id="pain-yn-buttons">
+          <button class="compare-btn" data-value="no" onclick="selectPain(false)">
+            <span class="emoji">&#x1F60A;</span>Nope, felt fine!
+          </button>
+          <button class="compare-btn" data-value="yes" onclick="selectPain(true)">
+            <span class="emoji">&#x1F915;</span>Yeah, a little
+          </button>
+        </div>
+        <div id="pain-rating-row" style="display:none; margin-top:20px">
+          <h3>How much did it hurt?</h3>
+          <div class="emoji-row" style="margin-top:12px">
+            <button class="emoji-btn" data-value="1" onclick="selectPainRating(this)"><span class="face">&#x1F610;</span><span class="label">Tiny bit</span></button>
+            <button class="emoji-btn" data-value="2" onclick="selectPainRating(this)"><span class="face">&#x1F615;</span><span class="label">A little</span></button>
+            <button class="emoji-btn" data-value="3" onclick="selectPainRating(this)"><span class="face">&#x1F61F;</span><span class="label">Medium</span></button>
+            <button class="emoji-btn" data-value="4" onclick="selectPainRating(this)"><span class="face">&#x1F627;</span><span class="label">Pretty bad</span></button>
+            <button class="emoji-btn" data-value="5" onclick="selectPainRating(this)"><span class="face">&#x1F62D;</span><span class="label">Really bad</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step: Notes + Save -->
       <div id="step-save" class="card fade-in" style="display:none">
         <button class="notes-toggle" id="notes-toggle" onclick="toggleNotes()">+ Add a note (optional)</button>
         <textarea class="notes-area" id="notes-area" placeholder="Anything you want to remember?"></textarea>
@@ -752,7 +439,9 @@
         <h2 id="success-message">Great job!</h2>
         <p id="success-encourage"></p>
         <div class="success-summary" id="success-summary"></div>
+        <div id="sync-status-checkin" class="sync-status"></div>
         <button class="btn-secondary" style="margin-top:20px" onclick="switchTab('history')">View History</button>
+        <button class="btn-secondary" style="margin-top:8px" onclick="shareWithDad()">&#x1F4E4; Share with Dad</button>
       </div>
     </div>
   </div>
@@ -768,17 +457,21 @@
       &#x1F4CB; Show PT Summary
     </button>
 
-    <!-- Chart -->
+    <div class="share-btn-row">
+      <button onclick="shareWithDad()">&#x1F4E4; Share</button>
+      <button onclick="showQRCode()">&#x1F4F1; QR Code</button>
+    </div>
+
     <div class="chart-container" id="chart-container" style="display:none">
       <h3>Trend</h3>
       <div class="chart-legend">
         <span><span class="legend-dot" style="background:var(--blue-leg)"></span> Stretched leg</span>
         <span><span class="legend-dot" style="background:#D1D5DB"></span> Unstretched leg</span>
+        <span>&#x1F915; Pain reported</span>
       </div>
       <div id="chart-area"></div>
     </div>
 
-    <!-- Entry list -->
     <div id="history-list"></div>
   </div>
 
@@ -794,13 +487,21 @@
       </div>
     </div>
     <div class="card" style="margin-top:8px">
+      <h3 style="margin-bottom:8px">Google Sheets Sync</h3>
+      <p style="font-size:13px; color:var(--text-light); line-height:1.5; margin-bottom:12px;">
+        Paste your Google Apps Script URL here to auto-sync check-ins to a Google Sheet. Dad can view the Sheet anytime.
+      </p>
+      <input type="url" class="setting-input wide" id="setting-sheet-url" placeholder="https://script.google.com/macros/s/..." onchange="saveSheetURL()">
+      <div id="sync-test-status" class="sync-status" style="margin-top:6px"></div>
+    </div>
+    <div class="card" style="margin-top:8px">
       <button class="btn-export" onclick="exportData()">&#x1F4CB; Copy Data to Clipboard</button>
       <button class="btn-danger" style="margin-top:12px" onclick="confirmClear()">&#x1F5D1; Clear All Data</button>
     </div>
     <div class="card" style="margin-top:8px">
       <h3 style="margin-bottom:8px">For your PT</h3>
       <p style="font-size:13px; color:var(--text-light); line-height:1.5;">
-        Tap "Show PT Summary" on the History tab to see a full report. It includes average ratings, how many days the stretcher helped, and a chart showing progress over time.
+        Tap "Show PT Summary" on the History tab to see a full report. It includes average ratings, pain data, how many days the stretcher helped, and a chart showing progress over time.
       </p>
     </div>
   </div>
@@ -809,6 +510,18 @@
   <div id="pt-overlay" class="pt-overlay">
     <button class="close-btn" onclick="closePTSummary()">&#x2190; Back</button>
     <div id="pt-content"></div>
+  </div>
+
+  <!-- ========== QR CODE OVERLAY ========== -->
+  <div id="qr-overlay" class="pt-overlay">
+    <button class="close-btn" onclick="closeQR()">&#x2190; Back</button>
+    <div style="text-align:center; padding:20px">
+      <h2>Scan with Dad's phone</h2>
+      <p style="color:var(--text-light); font-size:14px; margin:12px 0">
+        Point the camera at this code to see the last 7 days
+      </p>
+      <div id="qr-canvas" style="display:inline-block; padding:16px; background:white; border-radius:16px; box-shadow:0 2px 12px rgba(0,0,0,0.1)"></div>
+    </div>
   </div>
 
   <!-- ========== CLEAR CONFIRM MODAL ========== -->
@@ -823,11 +536,10 @@
     </div>
   </div>
 
-  <!-- ========== CONFETTI CONTAINER ========== -->
   <div id="confetti" class="confetti-container"></div>
 
   <!-- ========== BOTTOM NAV ========== -->
-  <nav class="bottom-nav">
+  <nav class="bottom-nav" id="bottom-nav">
     <button class="nav-btn active" data-tab="checkin" onclick="switchTab('checkin')">
       <span>&#x1F4DD;</span>
       <span class="nav-label">Check-in</span>
@@ -843,114 +555,129 @@
   </nav>
 
   <script>
-    // ========== DATA LAYER ==========
+    // ========== CONSTANTS ==========
     const STORAGE_KEY = 'stretchTracker';
     const EMOJIS = ['', '\u{1F616}', '\u{1F615}', '\u{1F610}', '\u{1F642}', '\u{1F601}'];
     const LABELS = ['', 'Very tight', 'A bit tight', 'Normal', 'A bit loose', 'Very loose'];
+    const PAIN_EMOJIS = ['', '\u{1F610}', '\u{1F615}', '\u{1F61F}', '\u{1F627}', '\u{1F62D}'];
+    const PAIN_LABELS = ['', 'Tiny bit', 'A little', 'Medium', 'Pretty bad', 'Really bad'];
     const ENCOURAGEMENTS = [
-      'Great job tracking today!',
-      'You\'re doing awesome!',
-      'Your PT will be impressed!',
-      'Keep it up, champ!',
-      'Nice work staying on top of it!',
-      'Way to be consistent!',
-      'Every day counts!'
+      'Great job tracking today!', 'You\'re doing awesome!', 'Your PT will be impressed!',
+      'Keep it up, champ!', 'Nice work staying on top of it!', 'Way to be consistent!', 'Every day counts!'
     ];
 
+    // ========== DATA LAYER ==========
     function loadData() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) return JSON.parse(raw);
-      } catch(e) {}
-      return { version: 1, userName: 'Max', entries: [] };
+      try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) return JSON.parse(raw); } catch(e) {}
+      return { version: 2, userName: 'Max', sheetURL: '', entries: [] };
     }
-
-    function saveData(data) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    }
-
-    function getToday() {
-      return new Date().toISOString().slice(0, 10);
-    }
-
-    function getTodayEntries() {
-      const data = loadData();
-      const today = getToday();
-      return data.entries.filter(e => e.date === today);
-    }
-
-    function getTodayMorning() {
-      return getTodayEntries().find(e => e.type === 'morning') || null;
-    }
-
-    function getTodayMidday() {
-      return getTodayEntries().find(e => e.type === 'midday') || null;
-    }
-
+    function saveData(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+    function getToday() { return new Date().toISOString().slice(0, 10); }
+    function getTodayEntries() { const data = loadData(); const today = getToday(); return data.entries.filter(e => e.date === today); }
+    function getTodayMorning() { return getTodayEntries().find(e => e.type === 'morning') || null; }
+    function getTodayMidday() { return getTodayEntries().find(e => e.type === 'midday') || null; }
     function getLastMorningEntry() {
       const data = loadData();
       const mornings = data.entries.filter(e => e.type === 'morning').sort((a, b) => b.date.localeCompare(a.date));
       return mornings.length > 0 ? mornings[0] : null;
     }
-
-    function getMorningEntries() {
-      const data = loadData();
-      return data.entries.filter(e => e.type === 'morning').sort((a, b) => a.date.localeCompare(b.date));
-    }
-
     function getStreak() {
       const data = loadData();
       const mornings = data.entries.filter(e => e.type === 'morning').sort((a, b) => b.date.localeCompare(a.date));
       if (mornings.length === 0) return 0;
-      let streak = 0;
-      let checkDate = new Date();
-      // Include today if logged
-      if (mornings[0].date === getToday()) {
-        streak = 1;
-        checkDate.setDate(checkDate.getDate() - 1);
-      } else {
-        // If not logged today, start from yesterday
-        checkDate.setDate(checkDate.getDate() - 1);
-      }
+      let streak = 0, checkDate = new Date();
+      if (mornings[0].date === getToday()) { streak = 1; checkDate.setDate(checkDate.getDate() - 1); }
+      else { checkDate.setDate(checkDate.getDate() - 1); }
       for (let i = mornings[0].date === getToday() ? 1 : 0; i < mornings.length; i++) {
-        const dateStr = checkDate.toISOString().slice(0, 10);
-        if (mornings[i].date === dateStr) {
-          streak++;
-          checkDate.setDate(checkDate.getDate() - 1);
-        } else {
-          break;
-        }
+        if (mornings[i].date === checkDate.toISOString().slice(0, 10)) { streak++; checkDate.setDate(checkDate.getDate() - 1); }
+        else break;
       }
       return streak;
     }
 
     // ========== CHECK-IN STATE ==========
-    let checkinState = {
-      type: 'morning',
-      step: 0,
-      leg: null,
-      stretchedRating: null,
-      unstretchedRating: null,
-      comparison: null,
-      notes: '',
-      editingId: null
-    };
+    let checkinState = { type:'morning', step:0, leg:null, stretchedRating:null, unstretchedRating:null, comparison:null, hadPain:null, painRating:null, notes:'', editingId:null };
 
-    const STEPS = ['leg', 'stretched', 'unstretched', 'compare', 'save'];
-    const MIDDAY_STEPS = ['stretched', 'unstretched', 'compare', 'save'];
+    const STEPS = ['leg', 'stretched', 'unstretched', 'compare', 'pain', 'save'];
+    const MIDDAY_STEPS = ['stretched', 'unstretched', 'compare', 'pain', 'save'];
 
-    function getCurrentSteps() {
-      return checkinState.type === 'midday' ? MIDDAY_STEPS : STEPS;
+    function getCurrentSteps() { return checkinState.type === 'midday' ? MIDDAY_STEPS : STEPS; }
+    function resetCheckinState() {
+      checkinState = { type:'morning', step:0, leg:null, stretchedRating:null, unstretchedRating:null, comparison:null, hadPain:null, painRating:null, notes:'', editingId:null };
     }
 
-    function resetCheckinState() {
-      checkinState = { type: 'morning', step: 0, leg: null, stretchedRating: null, unstretchedRating: null, comparison: null, notes: '', editingId: null };
+    // ========== SHARED VIEW CHECK ==========
+    function checkShareMode() {
+      const hash = window.location.hash;
+      if (!hash.startsWith('#share=')) return false;
+      try {
+        const encoded = hash.slice(7);
+        const json = decodeURIComponent(escape(atob(encoded)));
+        const shareData = JSON.parse(json);
+        renderSharedView(shareData);
+        return true;
+      } catch(e) { return false; }
+    }
+
+    function renderSharedView(shareData) {
+      document.getElementById('bottom-nav').style.display = 'none';
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+
+      const compMap = {b:'better', s:'same', w:'worse'};
+      const compText = {b:'\u{1F44D} Feels better', s:'\u{1F937} About the same', w:'\u{1F44E} Feels worse'};
+      const legMap = {l:'left', r:'right'};
+
+      let html = `<div class="shared-view">
+        <div class="shared-header">
+          <h1>Stretch Tracker</h1>
+          <p>Shared from ${escapeHtml(shareData.n || 'Max')}</p>
+          <span class="shared-badge">Read-only view</span>
+        </div>`;
+
+      if (shareData.e && shareData.e.length > 0) {
+        // Stats
+        const total = shareData.e.length;
+        const better = shareData.e.filter(e => e.c === 'b').length;
+        const painDays = shareData.e.filter(e => e.p > 0).length;
+        html += `<div class="stat-grid">
+          <div class="stat-box"><div class="value">${total}</div><div class="label">Days</div></div>
+          <div class="stat-box highlight"><div class="value">${Math.round(better/total*100)}%</div><div class="label">Felt Better</div></div>
+        </div>`;
+
+        // Entries
+        shareData.e.forEach(e => {
+          const dateObj = new Date(e.d + 'T12:00:00');
+          const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+          const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+          const dateStr = `${days[dateObj.getDay()]}, ${months[dateObj.getMonth()]} ${dateObj.getDate()}`;
+          const leg = legMap[e.l] || 'left';
+          const legLabel = leg === 'left' ? 'Left' : 'Right';
+          html += `<div class="history-entry">
+            <div class="date-row"><span class="date">${dateStr}</span><span class="leg-chip ${leg}">${legLabel} stretched</span></div>
+            <div class="ratings">
+              <div class="rating-item"><span class="type">Stretched</span><span class="face">${EMOJIS[e.s]}</span><span class="val">${LABELS[e.s]}</span></div>
+              <div class="rating-item"><span class="type">Other</span><span class="face">${EMOJIS[e.u]}</span><span class="val">${LABELS[e.u]}</span></div>
+            </div>
+            <span class="compare-badge ${compMap[e.c]}">${compText[e.c]}</span>
+            ${e.p > 0 ? `<div class="pain-indicator">\u{1F915} Pain: ${PAIN_EMOJIS[e.p]} ${PAIN_LABELS[e.p]}</div>` : ''}
+          </div>`;
+        });
+      } else {
+        html += '<div class="history-empty"><div class="emoji">\u{1F4DD}</div><p>No entries to show</p></div>';
+      }
+
+      html += '</div>';
+      const div = document.createElement('div');
+      div.innerHTML = html;
+      document.body.insertBefore(div.firstChild, document.getElementById('bottom-nav'));
     }
 
     // ========== INIT ==========
     function init() {
+      if (checkShareMode()) return;
       const data = loadData();
       document.getElementById('setting-name').value = data.userName || 'Max';
+      document.getElementById('setting-sheet-url').value = data.sheetURL || '';
       updateGreeting();
       updateCheckinScreen();
     }
@@ -961,81 +688,48 @@
       let greeting = 'Good morning';
       if (hour >= 12 && hour < 17) greeting = 'Good afternoon';
       else if (hour >= 17) greeting = 'Good evening';
-      const name = data.userName || 'Max';
-      document.getElementById('greeting').textContent = `${greeting}, ${name}!`;
-
-      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      document.getElementById('greeting').textContent = `${greeting}, ${data.userName || 'Max'}!`;
+      const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
       const now = new Date();
       document.getElementById('checkin-date').textContent = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`;
     }
 
     function updateCheckinScreen() {
-      const morning = getTodayMorning();
-      const midday = getTodayMidday();
-
-      // Streak
+      const morning = getTodayMorning(), midday = getTodayMidday();
       const streak = getStreak();
       const streakBanner = document.getElementById('streak-banner');
-      if (streak >= 2) {
-        streakBanner.style.display = 'flex';
-        document.getElementById('streak-text').textContent = `${streak} day streak!`;
-      } else {
-        streakBanner.style.display = 'none';
-      }
+      if (streak >= 2) { streakBanner.style.display = 'flex'; document.getElementById('streak-text').textContent = `${streak} day streak!`; }
+      else { streakBanner.style.display = 'none'; }
 
-      // Leg reminder
       const lastEntry = getLastMorningEntry();
       const reminderEl = document.getElementById('leg-reminder');
       if (lastEntry && !morning) {
         const nextLeg = lastEntry.stretchedLeg === 'left' ? 'RIGHT' : 'LEFT';
         reminderEl.style.display = 'flex';
         document.getElementById('reminder-text').textContent = `Last time was ${lastEntry.stretchedLeg.toUpperCase()} leg. Tonight try the ${nextLeg} leg!`;
-      } else {
-        reminderEl.style.display = 'none';
-      }
+      } else { reminderEl.style.display = 'none'; }
 
       const alreadyLogged = document.getElementById('already-logged');
       const middayLogged = document.getElementById('midday-logged');
       const form = document.getElementById('checkin-form');
 
-      if (morning && midday) {
-        // Both done
-        alreadyLogged.style.display = 'none';
-        middayLogged.style.display = 'block';
-        form.style.display = 'none';
-      } else if (morning && !midday) {
-        // Morning done, midday available
-        alreadyLogged.style.display = 'block';
-        middayLogged.style.display = 'none';
-        form.style.display = 'none';
-      } else {
-        // Nothing logged yet
-        alreadyLogged.style.display = 'none';
-        middayLogged.style.display = 'none';
-        form.style.display = 'block';
-        startMorningCheckin();
-      }
+      if (morning && midday) { alreadyLogged.style.display='none'; middayLogged.style.display='block'; form.style.display='none'; }
+      else if (morning && !midday) { alreadyLogged.style.display='block'; middayLogged.style.display='none'; form.style.display='none'; }
+      else { alreadyLogged.style.display='none'; middayLogged.style.display='none'; form.style.display='block'; startMorningCheckin(); }
     }
 
     function startMorningCheckin() {
-      resetCheckinState();
-      checkinState.type = 'morning';
-      // Auto-suggest alternating leg
+      resetCheckinState(); checkinState.type = 'morning';
       const last = getLastMorningEntry();
-      if (last) {
-        checkinState.leg = last.stretchedLeg === 'left' ? 'right' : 'left';
-      }
+      if (last) checkinState.leg = last.stretchedLeg === 'left' ? 'right' : 'left';
       showCheckinStep(0);
     }
 
     function startMiddayCheckin() {
-      resetCheckinState();
-      checkinState.type = 'midday';
+      resetCheckinState(); checkinState.type = 'midday';
       const morning = getTodayMorning();
-      if (morning) {
-        checkinState.leg = morning.stretchedLeg;
-      }
+      if (morning) checkinState.leg = morning.stretchedLeg;
       document.getElementById('already-logged').style.display = 'none';
       document.getElementById('checkin-form').style.display = 'block';
       document.getElementById('checkin-type-display').style.display = 'block';
@@ -1044,15 +738,12 @@
     }
 
     function editMorningCheckin() {
-      const morning = getTodayMorning();
-      if (!morning) return;
-      resetCheckinState();
-      checkinState.type = 'morning';
-      checkinState.editingId = morning.id;
-      checkinState.leg = morning.stretchedLeg;
-      checkinState.stretchedRating = morning.stretchedLegRating;
-      checkinState.unstretchedRating = morning.unstretchedLegRating;
-      checkinState.comparison = morning.comparison;
+      const morning = getTodayMorning(); if (!morning) return;
+      resetCheckinState(); checkinState.type = 'morning'; checkinState.editingId = morning.id;
+      checkinState.leg = morning.stretchedLeg; checkinState.stretchedRating = morning.stretchedLegRating;
+      checkinState.unstretchedRating = morning.unstretchedLegRating; checkinState.comparison = morning.comparison;
+      checkinState.hadPain = morning.hadPain != null ? morning.hadPain : null;
+      checkinState.painRating = morning.painRating || null;
       checkinState.notes = morning.notes || '';
       document.getElementById('already-logged').style.display = 'none';
       document.getElementById('checkin-form').style.display = 'block';
@@ -1062,10 +753,7 @@
     }
 
     function showCheckinStep(stepIndex) {
-      const steps = getCurrentSteps();
-      checkinState.step = stepIndex;
-
-      // Update step dots
+      const steps = getCurrentSteps(); checkinState.step = stepIndex;
       const dotsContainer = document.getElementById('step-dots');
       dotsContainer.innerHTML = '';
       steps.forEach((_, i) => {
@@ -1073,67 +761,60 @@
         dot.className = 'step-dot' + (i < stepIndex ? ' done' : '') + (i === stepIndex ? ' active' : '');
         dotsContainer.appendChild(dot);
       });
-
-      // Hide all steps
       document.querySelectorAll('[id^="step-"]').forEach(el => el.style.display = 'none');
-
       const currentStep = steps[stepIndex];
 
       if (currentStep === 'leg') {
         document.getElementById('step-leg').style.display = 'block';
-        // Pre-select if editing
         document.querySelectorAll('.leg-btn').forEach(btn => btn.classList.remove('selected'));
-        if (checkinState.leg) {
-          document.querySelector(`.leg-btn.${checkinState.leg}`).classList.add('selected');
-        }
+        if (checkinState.leg) document.querySelector(`.leg-btn.${checkinState.leg}`).classList.add('selected');
       } else if (currentStep === 'stretched') {
-        const legName = checkinState.leg === 'left' ? 'LEFT' : 'RIGHT';
-        document.getElementById('stretched-leg-name').textContent = legName;
+        document.getElementById('stretched-leg-name').textContent = checkinState.leg === 'left' ? 'LEFT' : 'RIGHT';
         document.getElementById('step-stretched').style.display = 'block';
-        // Reset selections visually
         document.querySelectorAll('#step-stretched .emoji-btn').forEach(btn => {
           btn.classList.remove('selected');
-          if (checkinState.stretchedRating && parseInt(btn.dataset.value) === checkinState.stretchedRating) {
-            btn.classList.add('selected');
-          }
+          if (checkinState.stretchedRating && parseInt(btn.dataset.value) === checkinState.stretchedRating) btn.classList.add('selected');
         });
       } else if (currentStep === 'unstretched') {
-        const otherLeg = checkinState.leg === 'left' ? 'RIGHT' : 'LEFT';
-        document.getElementById('unstretched-leg-name').textContent = otherLeg;
+        document.getElementById('unstretched-leg-name').textContent = checkinState.leg === 'left' ? 'RIGHT' : 'LEFT';
         document.getElementById('step-unstretched').style.display = 'block';
         document.querySelectorAll('#step-unstretched .emoji-btn').forEach(btn => {
           btn.classList.remove('selected');
-          if (checkinState.unstretchedRating && parseInt(btn.dataset.value) === checkinState.unstretchedRating) {
-            btn.classList.add('selected');
-          }
+          if (checkinState.unstretchedRating && parseInt(btn.dataset.value) === checkinState.unstretchedRating) btn.classList.add('selected');
         });
       } else if (currentStep === 'compare') {
         document.getElementById('step-compare').style.display = 'block';
-        document.querySelectorAll('.compare-btn').forEach(btn => {
+        document.querySelectorAll('#step-compare .compare-btn').forEach(btn => {
           btn.classList.remove('selected');
-          if (checkinState.comparison && btn.dataset.value === checkinState.comparison) {
-            btn.classList.add('selected');
-          }
+          if (checkinState.comparison && btn.dataset.value === checkinState.comparison) btn.classList.add('selected');
         });
+      } else if (currentStep === 'pain') {
+        document.getElementById('step-pain').style.display = 'block';
+        document.querySelectorAll('#pain-yn-buttons .compare-btn').forEach(b => b.classList.remove('selected'));
+        document.getElementById('pain-rating-row').style.display = 'none';
+        document.querySelectorAll('#pain-rating-row .emoji-btn').forEach(b => b.classList.remove('selected'));
+        if (checkinState.hadPain === true) {
+          document.querySelector('#pain-yn-buttons .compare-btn[data-value="yes"]').classList.add('selected');
+          document.getElementById('pain-rating-row').style.display = 'block';
+          if (checkinState.painRating) {
+            const rb = document.querySelector(`#pain-rating-row .emoji-btn[data-value="${checkinState.painRating}"]`);
+            if (rb) rb.classList.add('selected');
+          }
+        } else if (checkinState.hadPain === false) {
+          document.querySelector('#pain-yn-buttons .compare-btn[data-value="no"]').classList.add('selected');
+        }
       } else if (currentStep === 'save') {
         document.getElementById('step-save').style.display = 'block';
         document.getElementById('notes-area').value = checkinState.notes;
         const notesArea = document.getElementById('notes-area');
-        if (checkinState.notes) {
-          notesArea.classList.add('visible');
-          document.getElementById('notes-toggle').textContent = '- Hide note';
-        } else {
-          notesArea.classList.remove('visible');
-          document.getElementById('notes-toggle').textContent = '+ Add a note (optional)';
-        }
+        if (checkinState.notes) { notesArea.classList.add('visible'); document.getElementById('notes-toggle').textContent = '- Hide note'; }
+        else { notesArea.classList.remove('visible'); document.getElementById('notes-toggle').textContent = '+ Add a note (optional)'; }
       }
     }
 
     function advanceStep() {
       const steps = getCurrentSteps();
-      if (checkinState.step < steps.length - 1) {
-        showCheckinStep(checkinState.step + 1);
-      }
+      if (checkinState.step < steps.length - 1) showCheckinStep(checkinState.step + 1);
     }
 
     // ========== SELECTION HANDLERS ==========
@@ -1143,118 +824,96 @@
       document.querySelector(`.leg-btn.${leg}`).classList.add('selected');
       setTimeout(advanceStep, 200);
     }
-
     function selectRating(btn) {
-      const value = parseInt(btn.dataset.value);
-      const target = btn.dataset.target;
-      const parent = btn.closest('.card');
-
+      const value = parseInt(btn.dataset.value), target = btn.dataset.target, parent = btn.closest('.card');
       parent.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
-
-      if (target === 'stretched') {
-        checkinState.stretchedRating = value;
-      } else {
-        checkinState.unstretchedRating = value;
-      }
+      if (target === 'stretched') checkinState.stretchedRating = value;
+      else checkinState.unstretchedRating = value;
       setTimeout(advanceStep, 250);
     }
-
     function selectComparison(btn) {
       checkinState.comparison = btn.dataset.value;
-      document.querySelectorAll('.compare-btn').forEach(b => b.classList.remove('selected'));
+      document.querySelectorAll('#step-compare .compare-btn').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
       setTimeout(advanceStep, 200);
     }
-
+    function selectPain(hadPain) {
+      checkinState.hadPain = hadPain;
+      document.querySelectorAll('#pain-yn-buttons .compare-btn').forEach(b => b.classList.remove('selected'));
+      document.querySelector(`#pain-yn-buttons .compare-btn[data-value="${hadPain ? 'yes' : 'no'}"]`).classList.add('selected');
+      if (hadPain) { document.getElementById('pain-rating-row').style.display = 'block'; }
+      else { checkinState.painRating = null; document.getElementById('pain-rating-row').style.display = 'none'; setTimeout(advanceStep, 200); }
+    }
+    function selectPainRating(btn) {
+      checkinState.painRating = parseInt(btn.dataset.value);
+      document.querySelectorAll('#pain-rating-row .emoji-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      setTimeout(advanceStep, 250);
+    }
     function toggleNotes() {
-      const area = document.getElementById('notes-area');
-      const toggle = document.getElementById('notes-toggle');
-      if (area.classList.contains('visible')) {
-        area.classList.remove('visible');
-        toggle.textContent = '+ Add a note (optional)';
-      } else {
-        area.classList.add('visible');
-        toggle.textContent = '- Hide note';
-        area.focus();
-      }
+      const area = document.getElementById('notes-area'), toggle = document.getElementById('notes-toggle');
+      if (area.classList.contains('visible')) { area.classList.remove('visible'); toggle.textContent = '+ Add a note (optional)'; }
+      else { area.classList.add('visible'); toggle.textContent = '- Hide note'; area.focus(); }
     }
 
     // ========== SAVE ==========
     function saveCheckin() {
-      const notes = document.getElementById('notes-area').value.trim();
-      checkinState.notes = notes;
-
+      checkinState.notes = document.getElementById('notes-area').value.trim();
       const today = getToday();
       const entry = {
-        id: `${today}-${checkinState.type}`,
-        date: today,
-        type: checkinState.type,
-        timestamp: new Date().toISOString(),
-        stretchedLeg: checkinState.leg,
-        stretchedLegRating: checkinState.stretchedRating,
-        unstretchedLegRating: checkinState.unstretchedRating,
-        comparison: checkinState.comparison,
+        id: `${today}-${checkinState.type}`, date: today, type: checkinState.type,
+        timestamp: new Date().toISOString(), stretchedLeg: checkinState.leg,
+        stretchedLegRating: checkinState.stretchedRating, unstretchedLegRating: checkinState.unstretchedRating,
+        comparison: checkinState.comparison, hadPain: checkinState.hadPain, painRating: checkinState.painRating,
         notes: checkinState.notes
       };
-
       const data = loadData();
-
       if (checkinState.editingId) {
-        // Replace existing
         const idx = data.entries.findIndex(e => e.id === checkinState.editingId);
-        if (idx >= 0) {
-          data.entries[idx] = entry;
-        } else {
-          data.entries.push(entry);
-        }
+        if (idx >= 0) data.entries[idx] = entry; else data.entries.push(entry);
       } else {
-        // Remove duplicate if re-saving same type same day
         data.entries = data.entries.filter(e => e.id !== entry.id);
         data.entries.push(entry);
       }
-
       saveData(data);
-
-      // Show success
       showSuccess(entry);
       fireConfetti();
+      pushToSheet(entry);
     }
 
     function showSuccess(entry) {
       document.querySelectorAll('[id^="step-"]').forEach(el => el.style.display = 'none');
       document.getElementById('step-dots').innerHTML = '';
-
-      const msg = ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)];
-      document.getElementById('success-message').textContent = msg;
-      document.getElementById('success-encourage').textContent =
-        checkinState.type === 'midday' ? 'Midday check-in saved!' : 'Morning check-in saved!';
-
+      document.getElementById('success-message').textContent = ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)];
+      document.getElementById('success-encourage').textContent = checkinState.type === 'midday' ? 'Midday check-in saved!' : 'Morning check-in saved!';
       const legName = entry.stretchedLeg === 'left' ? 'Left' : 'Right';
       const otherLeg = entry.stretchedLeg === 'left' ? 'Right' : 'Left';
       const compText = entry.comparison === 'better' ? 'Yes, better' : entry.comparison === 'same' ? 'About the same' : 'No, worse';
-
+      let painRow = '';
+      if (entry.hadPain === true) painRow = `<div class="row"><span class="label">Pain</span><span>${PAIN_EMOJIS[entry.painRating]} ${PAIN_LABELS[entry.painRating]}</span></div>`;
+      else if (entry.hadPain === false) painRow = `<div class="row"><span class="label">Pain</span><span>None \u{1F60A}</span></div>`;
       document.getElementById('success-summary').innerHTML = `
         <div class="row"><span class="label">Stretched leg</span><span>${legName} ${EMOJIS[entry.stretchedLegRating]} ${LABELS[entry.stretchedLegRating]}</span></div>
         <div class="row"><span class="label">${otherLeg} leg</span><span>${EMOJIS[entry.unstretchedLegRating]} ${LABELS[entry.unstretchedLegRating]}</span></div>
         <div class="row"><span class="label">Feels different?</span><span>${compText}</span></div>
+        ${painRow}
         ${entry.notes ? `<div class="row"><span class="label">Note</span><span>${escapeHtml(entry.notes)}</span></div>` : ''}
       `;
-
+      document.getElementById('sync-status-checkin').textContent = '';
       document.getElementById('step-success').style.display = 'block';
     }
 
     function fireConfetti() {
       const container = document.getElementById('confetti');
-      const colors = ['#FF6B6B', '#FFD93D', '#6BCB77', '#4A90D9', '#A855F7', '#FFA06B'];
+      const colors = ['#FF6B6B','#FFD93D','#6BCB77','#4A90D9','#A855F7','#FFA06B'];
       for (let i = 0; i < 40; i++) {
         const piece = document.createElement('div');
         piece.className = 'confetti-piece';
-        piece.style.left = Math.random() * 100 + '%';
-        piece.style.top = '-10px';
-        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-        piece.style.animationDelay = Math.random() * 0.5 + 's';
-        piece.style.animationDuration = (1 + Math.random()) + 's';
+        piece.style.left = Math.random()*100 + '%'; piece.style.top = '-10px';
+        piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+        piece.style.animationDelay = Math.random()*0.5 + 's';
+        piece.style.animationDuration = (1+Math.random()) + 's';
         container.appendChild(piece);
       }
       setTimeout(() => { container.innerHTML = ''; }, 2500);
@@ -1266,13 +925,8 @@
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       document.getElementById(`screen-${tab}`).classList.add('active');
       document.querySelector(`.nav-btn[data-tab="${tab}"]`).classList.add('active');
-
-      if (tab === 'checkin') {
-        updateGreeting();
-        updateCheckinScreen();
-      } else if (tab === 'history') {
-        renderHistory();
-      }
+      if (tab === 'checkin') { updateGreeting(); updateCheckinScreen(); }
+      else if (tab === 'history') renderHistory();
     }
 
     // ========== HISTORY ==========
@@ -1280,134 +934,64 @@
       const data = loadData();
       const list = document.getElementById('history-list');
       const chartContainer = document.getElementById('chart-container');
-
-      // Group entries by date, newest first
       const mornings = data.entries.filter(e => e.type === 'morning').sort((a, b) => b.date.localeCompare(a.date));
-
       if (mornings.length === 0) {
         chartContainer.style.display = 'none';
-        list.innerHTML = `
-          <div class="history-empty">
-            <div class="emoji">\u{1F4DD}</div>
-            <h2>No entries yet</h2>
-            <p>Complete your first morning check-in to start tracking!</p>
-          </div>
-        `;
+        list.innerHTML = '<div class="history-empty"><div class="emoji">\u{1F4DD}</div><h2>No entries yet</h2><p>Complete your first morning check-in to start tracking!</p></div>';
         return;
       }
+      if (mornings.length >= 2) { chartContainer.style.display = 'block'; renderChart(mornings.slice().reverse()); }
+      else chartContainer.style.display = 'none';
 
-      // Render chart
-      if (mornings.length >= 2) {
-        chartContainer.style.display = 'block';
-        renderChart(mornings.slice().reverse());
-      } else {
-        chartContainer.style.display = 'none';
-      }
-
-      // Render entries
       list.innerHTML = mornings.map(entry => {
         const midday = data.entries.find(e => e.type === 'midday' && e.date === entry.date);
         const dateObj = new Date(entry.date + 'T12:00:00');
-        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
         const dateStr = `${days[dateObj.getDay()]}, ${months[dateObj.getMonth()]} ${dateObj.getDate()}`;
         const legLabel = entry.stretchedLeg === 'left' ? 'Left' : 'Right';
         const otherLeg = entry.stretchedLeg === 'left' ? 'Right' : 'Left';
-
-        return `
-          <div class="history-entry">
-            <div class="date-row">
-              <span class="date">${dateStr}</span>
-              <span class="leg-chip ${entry.stretchedLeg}">${legLabel} leg stretched</span>
-            </div>
-            <div class="ratings">
-              <div class="rating-item">
-                <span class="type">Stretched (${legLabel})</span>
-                <span class="face">${EMOJIS[entry.stretchedLegRating]}</span>
-                <span class="val">${LABELS[entry.stretchedLegRating]}</span>
-              </div>
-              <div class="rating-item">
-                <span class="type">${otherLeg} leg</span>
-                <span class="face">${EMOJIS[entry.unstretchedLegRating]}</span>
-                <span class="val">${LABELS[entry.unstretchedLegRating]}</span>
-              </div>
-            </div>
-            <span class="compare-badge ${entry.comparison}">${
-              entry.comparison === 'better' ? '\u{1F44D} Feels better' :
-              entry.comparison === 'same' ? '\u{1F937} About the same' :
-              '\u{1F44E} Feels worse'
-            }</span>
-            ${midday ? `<div class="midday-indicator">\u{2600}\uFE0F Midday: Stretched ${EMOJIS[midday.stretchedLegRating]} / Other ${EMOJIS[midday.unstretchedLegRating]} - ${
-              midday.comparison === 'better' ? 'Better' : midday.comparison === 'same' ? 'Same' : 'Worse'
-            }</div>` : ''}
-            ${entry.notes ? `<div class="notes-text">"${escapeHtml(entry.notes)}"</div>` : ''}
+        return `<div class="history-entry">
+          <div class="date-row"><span class="date">${dateStr}</span><span class="leg-chip ${entry.stretchedLeg}">${legLabel} leg stretched</span></div>
+          <div class="ratings">
+            <div class="rating-item"><span class="type">Stretched (${legLabel})</span><span class="face">${EMOJIS[entry.stretchedLegRating]}</span><span class="val">${LABELS[entry.stretchedLegRating]}</span></div>
+            <div class="rating-item"><span class="type">${otherLeg} leg</span><span class="face">${EMOJIS[entry.unstretchedLegRating]}</span><span class="val">${LABELS[entry.unstretchedLegRating]}</span></div>
           </div>
-        `;
+          <span class="compare-badge ${entry.comparison}">${entry.comparison === 'better' ? '\u{1F44D} Feels better' : entry.comparison === 'same' ? '\u{1F937} About the same' : '\u{1F44E} Feels worse'}</span>
+          ${entry.hadPain ? `<div class="pain-indicator">\u{1F915} Pain: ${PAIN_EMOJIS[entry.painRating]} ${PAIN_LABELS[entry.painRating]}</div>` : ''}
+          ${midday ? `<div class="midday-indicator">\u{2600}\uFE0F Midday: Stretched ${EMOJIS[midday.stretchedLegRating]} / Other ${EMOJIS[midday.unstretchedLegRating]} - ${midday.comparison === 'better' ? 'Better' : midday.comparison === 'same' ? 'Same' : 'Worse'}</div>` : ''}
+          ${entry.notes ? `<div class="notes-text">"${escapeHtml(entry.notes)}"</div>` : ''}
+        </div>`;
       }).join('');
     }
 
     function renderChart(entries) {
       const chartArea = document.getElementById('chart-area');
-      const padding = { top: 10, right: 20, bottom: 30, left: 30 };
+      const padding = { top: 20, right: 20, bottom: 30, left: 30 };
       const w = Math.max(300, entries.length * 50 + padding.left + padding.right);
       const h = 180;
-      const plotW = w - padding.left - padding.right;
       const plotH = h - padding.top - padding.bottom;
-
-      const xStep = entries.length > 1 ? plotW / (entries.length - 1) : plotW / 2;
+      const xStep = entries.length > 1 ? (w - padding.left - padding.right) / (entries.length - 1) : (w - padding.left - padding.right) / 2;
       const yStep = plotH / 4;
-
       let svg = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="display:block;max-width:100%;">`;
-
-      // Grid lines
-      for (let i = 0; i <= 4; i++) {
-        const y = padding.top + i * yStep;
-        svg += `<line x1="${padding.left}" y1="${y}" x2="${w - padding.right}" y2="${y}" stroke="#F3F4F6" stroke-width="1"/>`;
-      }
-
-      // Y labels
-      const yLabels = ['5', '4', '3', '2', '1'];
-      for (let i = 0; i <= 4; i++) {
-        const y = padding.top + i * yStep;
-        svg += `<text x="${padding.left - 8}" y="${y + 4}" font-size="10" fill="#9CA3AF" text-anchor="end">${yLabels[i]}</text>`;
-      }
-
-      // Points and lines
-      const stretchedPoints = entries.map((e, i) => ({
-        x: padding.left + i * xStep,
-        y: padding.top + (5 - e.stretchedLegRating) * yStep
-      }));
-      const unstretchedPoints = entries.map((e, i) => ({
-        x: padding.left + i * xStep,
-        y: padding.top + (5 - e.unstretchedLegRating) * yStep
-      }));
-
-      // Lines
+      for (let i = 0; i <= 4; i++) { const y = padding.top + i * yStep; svg += `<line x1="${padding.left}" y1="${y}" x2="${w-padding.right}" y2="${y}" stroke="#F3F4F6" stroke-width="1"/>`; }
+      ['5','4','3','2','1'].forEach((l, i) => { svg += `<text x="${padding.left-8}" y="${padding.top + i*yStep + 4}" font-size="10" fill="#9CA3AF" text-anchor="end">${l}</text>`; });
+      const sp = entries.map((e, i) => ({ x: padding.left+i*xStep, y: padding.top+(5-e.stretchedLegRating)*yStep }));
+      const up = entries.map((e, i) => ({ x: padding.left+i*xStep, y: padding.top+(5-e.unstretchedLegRating)*yStep }));
       if (entries.length > 1) {
-        svg += `<polyline points="${stretchedPoints.map(p => `${p.x},${p.y}`).join(' ')}" fill="none" stroke="var(--blue-leg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
-        svg += `<polyline points="${unstretchedPoints.map(p => `${p.x},${p.y}`).join(' ')}" fill="none" stroke="#D1D5DB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5,4"/>`;
+        svg += `<polyline points="${sp.map(p=>`${p.x},${p.y}`).join(' ')}" fill="none" stroke="var(--blue-leg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+        svg += `<polyline points="${up.map(p=>`${p.x},${p.y}`).join(' ')}" fill="none" stroke="#D1D5DB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5,4"/>`;
       }
-
-      // Dots
-      stretchedPoints.forEach(p => {
-        svg += `<circle cx="${p.x}" cy="${p.y}" r="5" fill="var(--blue-leg)"/>`;
-      });
-      unstretchedPoints.forEach(p => {
-        svg += `<circle cx="${p.x}" cy="${p.y}" r="5" fill="#D1D5DB" stroke="white" stroke-width="1.5"/>`;
-      });
-
-      // X labels (dates)
+      sp.forEach(p => { svg += `<circle cx="${p.x}" cy="${p.y}" r="5" fill="var(--blue-leg)"/>`; });
+      up.forEach(p => { svg += `<circle cx="${p.x}" cy="${p.y}" r="5" fill="#D1D5DB" stroke="white" stroke-width="1.5"/>`; });
       entries.forEach((e, i) => {
         const x = padding.left + i * xStep;
         const dateObj = new Date(e.date + 'T12:00:00');
-        const days = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-        const label = days[dateObj.getDay()];
-        svg += `<text x="${x}" y="${h - 5}" font-size="10" fill="#9CA3AF" text-anchor="middle">${label}</text>`;
-        // Leg color dot below day
-        const legColor = e.stretchedLeg === 'left' ? 'var(--blue-leg)' : 'var(--green-leg)';
-        svg += `<circle cx="${x}" cy="${h - 18}" r="3" fill="${legColor}"/>`;
+        const dys = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+        svg += `<text x="${x}" y="${h-5}" font-size="10" fill="#9CA3AF" text-anchor="middle">${dys[dateObj.getDay()]}</text>`;
+        svg += `<circle cx="${x}" cy="${h-18}" r="3" fill="${e.stretchedLeg==='left'?'var(--blue-leg)':'var(--green-leg)'}"/>`;
+        if (e.hadPain) svg += `<text x="${x}" y="${padding.top-4}" font-size="12" text-anchor="middle">\u{1F915}</text>`;
       });
-
       svg += '</svg>';
       chartArea.innerHTML = svg;
     }
@@ -1416,200 +1000,447 @@
     function showPTSummary() {
       const data = loadData();
       const mornings = data.entries.filter(e => e.type === 'morning').sort((a, b) => a.date.localeCompare(b.date));
-
       if (mornings.length === 0) {
         document.getElementById('pt-content').innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-light);"><p>No data to show yet.</p></div>';
-        document.getElementById('pt-overlay').classList.add('active');
-        return;
+        document.getElementById('pt-overlay').classList.add('active'); return;
       }
-
       const name = data.userName || 'Max';
-      const firstDate = formatDateLong(mornings[0].date);
-      const lastDate = formatDateLong(mornings[mornings.length - 1].date);
+      const firstDate = formatDateLong(mornings[0].date), lastDate = formatDateLong(mornings[mornings.length-1].date);
       const totalDays = mornings.length;
+      const avgStretched = (mornings.reduce((s,e) => s+e.stretchedLegRating, 0)/totalDays).toFixed(1);
+      const avgUnstretched = (mornings.reduce((s,e) => s+e.unstretchedLegRating, 0)/totalDays).toFixed(1);
+      const betterDays = mornings.filter(e => e.comparison==='better').length;
+      const sameDays = mornings.filter(e => e.comparison==='same').length;
+      const worseDays = mornings.filter(e => e.comparison==='worse').length;
+      const betterPct = Math.round((betterDays/totalDays)*100);
+      const painDays = mornings.filter(e => e.hadPain===true).length;
+      const painEntries = mornings.filter(e => e.hadPain===true && e.painRating);
+      const avgPain = painEntries.length > 0 ? (painEntries.reduce((s,e)=>s+e.painRating,0)/painEntries.length).toFixed(1) : 'N/A';
 
-      const avgStretched = (mornings.reduce((s, e) => s + e.stretchedLegRating, 0) / totalDays).toFixed(1);
-      const avgUnstretched = (mornings.reduce((s, e) => s + e.unstretchedLegRating, 0) / totalDays).toFixed(1);
-      const betterDays = mornings.filter(e => e.comparison === 'better').length;
-      const sameDays = mornings.filter(e => e.comparison === 'same').length;
-      const worseDays = mornings.filter(e => e.comparison === 'worse').length;
-      const betterPct = Math.round((betterDays / totalDays) * 100);
-
-      let html = `
-        <h1 style="font-size:22px;margin-bottom:4px;">Stretch Tracker Report</h1>
+      let html = `<h1 style="font-size:22px;margin-bottom:4px;">Stretch Tracker Report</h1>
         <p style="color:var(--text-light);font-size:14px;margin-bottom:20px;">For ${escapeHtml(name)} | ${firstDate} - ${lastDate}</p>
-
         <div class="stat-grid">
-          <div class="stat-box">
-            <div class="value">${totalDays}</div>
-            <div class="label">Days Tracked</div>
-          </div>
-          <div class="stat-box highlight">
-            <div class="value">${betterPct}%</div>
-            <div class="label">Days Felt Better</div>
-          </div>
-          <div class="stat-box">
-            <div class="value">${avgStretched}</div>
-            <div class="label">Avg Stretched Rating</div>
-          </div>
-          <div class="stat-box">
-            <div class="value">${avgUnstretched}</div>
-            <div class="label">Avg Unstretched Rating</div>
-          </div>
+          <div class="stat-box"><div class="value">${totalDays}</div><div class="label">Days Tracked</div></div>
+          <div class="stat-box highlight"><div class="value">${betterPct}%</div><div class="label">Days Felt Better</div></div>
+          <div class="stat-box"><div class="value">${avgStretched}</div><div class="label">Avg Stretched</div></div>
+          <div class="stat-box"><div class="value">${avgUnstretched}</div><div class="label">Avg Unstretched</div></div>
+          <div class="stat-box ${painDays > 0 ? 'warn' : ''}"><div class="value">${painDays}</div><div class="label">Days with Pain</div></div>
+          <div class="stat-box ${painDays > 0 ? 'warn' : ''}"><div class="value">${avgPain}</div><div class="label">Avg Pain Rating</div></div>
         </div>
+        <div class="card" style="margin-bottom:16px"><h3>Comparison Breakdown</h3><div style="margin-top:8px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:14px">\u{1F44D} Felt better:</span><strong>${betterDays} day${betterDays!==1?'s':''}</strong></div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:14px">\u{1F937} About the same:</span><strong>${sameDays} day${sameDays!==1?'s':''}</strong></div>
+          <div style="display:flex;align-items:center;gap:8px"><span style="font-size:14px">\u{1F44E} Felt worse:</span><strong>${worseDays} day${worseDays!==1?'s':''}</strong></div>
+        </div></div>`;
 
-        <div class="card" style="margin-bottom:16px">
-          <h3>Comparison Breakdown</h3>
-          <div style="margin-top:8px">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-              <span style="font-size:14px">\u{1F44D} Felt better:</span>
-              <strong>${betterDays} day${betterDays !== 1 ? 's' : ''}</strong>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-              <span style="font-size:14px">\u{1F937} About the same:</span>
-              <strong>${sameDays} day${sameDays !== 1 ? 's' : ''}</strong>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px">
-              <span style="font-size:14px">\u{1F44E} Felt worse:</span>
-              <strong>${worseDays} day${worseDays !== 1 ? 's' : ''}</strong>
-            </div>
-          </div>
-        </div>
-      `;
-
-      // Chart
       if (mornings.length >= 2) {
         html += `<div class="card" style="margin-bottom:16px"><h3>Trend</h3>
           <div class="chart-legend">
             <span><span class="legend-dot" style="background:var(--blue-leg)"></span> Stretched</span>
             <span><span class="legend-dot" style="background:#D1D5DB"></span> Unstretched</span>
-          </div>
-          <div id="pt-chart-area"></div>
-        </div>`;
+            <span>\u{1F915} Pain</span>
+          </div><div id="pt-chart-area"></div></div>`;
       }
 
-      // Table
-      html += `
-        <div class="card">
-          <h3>Full Log</h3>
-          <div style="overflow-x:auto">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Leg</th>
-                  <th>Str.</th>
-                  <th>Other</th>
-                  <th>Result</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${mornings.map(e => {
-                  const dateObj = new Date(e.date + 'T12:00:00');
-                  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-                  const d = `${months[dateObj.getMonth()]} ${dateObj.getDate()}`;
-                  const leg = e.stretchedLeg === 'left' ? 'L' : 'R';
-                  const comp = e.comparison === 'better' ? '\u{1F44D}' : e.comparison === 'same' ? '\u{1F937}' : '\u{1F44E}';
-                  return `<tr><td>${d}</td><td>${leg}</td><td>${EMOJIS[e.stretchedLegRating]}</td><td>${EMOJIS[e.unstretchedLegRating]}</td><td>${comp}</td></tr>`;
-                }).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      `;
+      html += `<div class="card"><h3>Full Log</h3><div style="overflow-x:auto"><table class="data-table"><thead><tr>
+        <th>Date</th><th>Leg</th><th>Str.</th><th>Other</th><th>Result</th><th>Pain</th></tr></thead><tbody>
+        ${mornings.map(e => {
+          const dateObj = new Date(e.date+'T12:00:00');
+          const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+          const d = `${months[dateObj.getMonth()]} ${dateObj.getDate()}`;
+          const leg = e.stretchedLeg==='left'?'L':'R';
+          const comp = e.comparison==='better'?'\u{1F44D}':e.comparison==='same'?'\u{1F937}':'\u{1F44E}';
+          const pain = e.hadPain ? PAIN_EMOJIS[e.painRating] : '-';
+          return `<tr><td>${d}</td><td>${leg}</td><td>${EMOJIS[e.stretchedLegRating]}</td><td>${EMOJIS[e.unstretchedLegRating]}</td><td>${comp}</td><td>${pain}</td></tr>`;
+        }).join('')}</tbody></table></div></div>`;
 
-      // Notes
       const withNotes = mornings.filter(e => e.notes);
       if (withNotes.length > 0) {
-        html += `
-          <div class="card" style="margin-top:16px">
-            <h3>Notes</h3>
-            ${withNotes.map(e => {
-              const dateObj = new Date(e.date + 'T12:00:00');
-              const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-              const d = `${months[dateObj.getMonth()]} ${dateObj.getDate()}`;
-              return `<p style="font-size:13px;margin-top:8px"><strong>${d}:</strong> ${escapeHtml(e.notes)}</p>`;
-            }).join('')}
-          </div>
-        `;
+        html += `<div class="card" style="margin-top:16px"><h3>Notes</h3>
+          ${withNotes.map(e => {
+            const dateObj = new Date(e.date+'T12:00:00');
+            const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            return `<p style="font-size:13px;margin-top:8px"><strong>${months[dateObj.getMonth()]} ${dateObj.getDate()}:</strong> ${escapeHtml(e.notes)}</p>`;
+          }).join('')}</div>`;
       }
 
       document.getElementById('pt-content').innerHTML = html;
       document.getElementById('pt-overlay').classList.add('active');
-
-      // Render chart in PT summary if needed
       if (mornings.length >= 2) {
         const ptChartArea = document.getElementById('pt-chart-area');
-        if (ptChartArea) {
-          const tmpChartArea = document.getElementById('chart-area');
-          const original = tmpChartArea ? tmpChartArea.innerHTML : '';
-          renderChart(mornings);
-          ptChartArea.innerHTML = document.getElementById('chart-area').innerHTML;
-          if (original) document.getElementById('chart-area').innerHTML = original;
-        }
+        if (ptChartArea) { const orig = document.getElementById('chart-area')?.innerHTML || ''; renderChart(mornings); ptChartArea.innerHTML = document.getElementById('chart-area').innerHTML; if (orig) document.getElementById('chart-area').innerHTML = orig; }
+      }
+    }
+    function closePTSummary() { document.getElementById('pt-overlay').classList.remove('active'); }
+
+    // ========== SHARE ==========
+    function generateShareText(dayCount) {
+      const data = loadData();
+      const mornings = data.entries.filter(e => e.type==='morning').sort((a,b) => b.date.localeCompare(a.date)).slice(0, dayCount||7);
+      if (mornings.length === 0) return 'No check-ins yet!';
+      const name = data.userName || 'Max';
+      let text = `${name}'s Stretch Tracker\nLast ${mornings.length} days:\n\n`;
+      mornings.forEach(e => {
+        const d = new Date(e.date+'T12:00:00');
+        const dateStr = `${d.getMonth()+1}/${d.getDate()}`;
+        const leg = e.stretchedLeg==='left'?'L':'R';
+        const comp = e.comparison==='better'?'Better':e.comparison==='same'?'Same':'Worse';
+        const pain = e.hadPain ? ` Pain:${e.painRating}/5` : '';
+        text += `${dateStr} (${leg}) Str:${e.stretchedLegRating}/5 Other:${e.unstretchedLegRating}/5 ${comp}${pain}\n`;
+      });
+      return text;
+    }
+
+    function generateShareURL(dayCount) {
+      const data = loadData();
+      const mornings = data.entries.filter(e => e.type==='morning').sort((a,b) => b.date.localeCompare(a.date)).slice(0, dayCount||7);
+      const shareData = { n: data.userName||'Max', e: mornings.map(e => ({
+        d:e.date, l:e.stretchedLeg[0], s:e.stretchedLegRating, u:e.unstretchedLegRating,
+        c:e.comparison[0], p:e.hadPain?e.painRating:0
+      }))};
+      const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(shareData))));
+      const baseURL = window.location.href.split('#')[0].split('?')[0];
+      return `${baseURL}#share=${encoded}`;
+    }
+
+    function shareWithDad() {
+      const text = generateShareText(7);
+      const url = generateShareURL(7);
+      if (navigator.share) {
+        navigator.share({ title: 'Stretch Tracker Update', text: text, url: url }).catch(() => {});
+      } else {
+        const full = text + '\nView details: ' + url;
+        navigator.clipboard.writeText(full).then(() => { alert('Copied to clipboard! Paste it in a message.'); }).catch(() => {
+          const ta = document.createElement('textarea'); ta.value = full; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+          alert('Copied to clipboard!');
+        });
       }
     }
 
-    function closePTSummary() {
-      document.getElementById('pt-overlay').classList.remove('active');
+    // ========== QR CODE ==========
+    // Minimal QR code generator (based on Nayuki's QR Code generator, MIT license)
+    // Generates a QR code as an SVG element
+    const QR = (() => {
+      function generate(text) {
+        // Use a simple encoding approach for alphanumeric/byte mode
+        const segs = [{mode:4, numChars:text.length, data:textToBytes(text)}];
+        const ver = findVersion(segs);
+        const size = ver * 4 + 17;
+        const modules = Array.from({length:size}, ()=>Array(size).fill(null));
+        const isFunc = Array.from({length:size}, ()=>Array(size).fill(false));
+
+        drawFinderPatterns(modules, isFunc, size);
+        drawAlignmentPatterns(modules, isFunc, ver, size);
+        drawTimingPatterns(modules, isFunc, size);
+        modules[size-8][8] = true; isFunc[size-8][8] = true;
+
+        const datacw = getDataCodewords(segs, ver);
+        const eccw = getEccCodewords(datacw, ver);
+        const allcw = interleave(datacw, eccw, ver);
+        const bits = codewordsToBits(allcw);
+
+        placeDataBits(modules, isFunc, bits, size);
+        const mask = applyBestMask(modules, isFunc, size);
+        drawFormatBits(modules, mask, size);
+        if (ver >= 7) drawVersionBits(modules, ver, size);
+
+        return modules;
+      }
+
+      function textToBytes(s) { const b=[]; for(let i=0;i<s.length;i++){const c=s.charCodeAt(i); if(c<128)b.push(c); else if(c<2048){b.push(192|(c>>6),128|(c&63));} else{b.push(224|(c>>12),128|((c>>6)&63),128|(c&63));}} return b; }
+
+      function findVersion(segs) {
+        for(let v=1;v<=40;v++){ const cap=getDataCapacity(v); const needed=segs.reduce((s,seg)=>s+4+(v<10?8:16)+seg.data.length*8,0); if(needed<=cap*8) return v; }
+        return 40;
+      }
+
+      function getDataCapacity(ver) {
+        const totalCw = getNumRawDataModules(ver)/8|0;
+        const ecInfo = EC_TABLE[ver];
+        return totalCw - ecInfo[0]*ecInfo[1] - ecInfo[2]*ecInfo[3];
+      }
+
+      function getNumRawDataModules(ver) {
+        const size = ver*4+17; let result = size*size;
+        result -= 64*3; // Finders
+        result -= (size-16)*2 + 1; // Timing
+        if(ver>=2){const n=Math.floor(ver/7)+2;result-=(n*n-3)*25;result-=(n-2)*2*5;}
+        result -= ver>=7?36:0; result -= 31; // Format
+        return result;
+      }
+
+      // EC table: [numBlocks1, ecPerBlock1, numBlocks2, ecPerBlock2] for EC level L
+      const EC_TABLE = {1:[1,7,0,0],2:[1,10,0,0],3:[1,15,0,0],4:[1,20,0,0],5:[1,26,0,0],6:[2,18,0,0],7:[2,20,0,0],8:[2,24,0,0],9:[2,30,0,0],10:[2,18,2,20],11:[4,18,0,0],12:[2,20,2,22],13:[4,22,0,0],14:[3,22,1,24],15:[4,24,1,26],16:[4,24,2,26],17:[4,28,1,30],18:[4,28,2,30],19:[4,26,4,28],20:[4,26,4,30],21:[4,26,4,28],22:[4,28,4,30],23:[4,28,4,30],24:[6,28,2,30],25:[6,28,4,30],26:[6,28,4,30],27:[8,28,2,30],28:[6,28,6,30],29:[8,28,2,30],30:[8,28,4,30],31:[8,28,4,30],32:[8,28,6,30],33:[8,28,6,30],34:[10,28,2,30],35:[10,28,4,30],36:[10,28,4,30],37:[10,28,6,30],38:[10,28,6,30],39:[14,28,0,0],40:[12,28,4,30]};
+
+      function getDataCodewords(segs, ver) {
+        const cap = getDataCapacity(ver);
+        const bits = [];
+        segs.forEach(seg => {
+          pushBits(bits, seg.mode, 4);
+          pushBits(bits, seg.numChars, ver < 10 ? 8 : 16);
+          seg.data.forEach(b => pushBits(bits, b, 8));
+        });
+        pushBits(bits, 0, Math.min(4, cap*8 - bits.length));
+        while(bits.length%8 !== 0) bits.push(0);
+        const pads = [0xEC, 0x11];
+        for(let i=0; bits.length < cap*8; i++) pushBits(bits, pads[i%2], 8);
+        const cw = [];
+        for(let i=0;i<bits.length;i+=8) cw.push(bits.slice(i,i+8).reduce((v,b,j)=>v|(b<<(7-j)),0));
+        return cw;
+      }
+
+      function getEccCodewords(data, ver) {
+        const ei = EC_TABLE[ver];
+        const nb1=ei[0], ecpb1=ei[1], nb2=ei[2], ecpb2=ei[3];
+        const totalData = data.length;
+        const dpb1 = nb2>0 ? Math.floor(totalData/(nb1+nb2)) : Math.floor(totalData/nb1);
+        const dpb2 = dpb1 + (nb2>0?1:0);
+        const blocks = [];
+        let offset = 0;
+        for(let i=0;i<nb1;i++){blocks.push({data:data.slice(offset,offset+dpb1),ec:reedSolomon(data.slice(offset,offset+dpb1),ecpb1)});offset+=dpb1;}
+        for(let i=0;i<nb2;i++){blocks.push({data:data.slice(offset,offset+dpb2),ec:reedSolomon(data.slice(offset,offset+dpb2),ecpb2)});offset+=dpb2;}
+        return blocks;
+      }
+
+      function interleave(data, blocks, ver) {
+        const result = [];
+        const maxD = Math.max(...blocks.map(b=>b.data.length));
+        for(let i=0;i<maxD;i++) blocks.forEach(b=>{if(i<b.data.length)result.push(b.data[i]);});
+        const maxE = Math.max(...blocks.map(b=>b.ec.length));
+        for(let i=0;i<maxE;i++) blocks.forEach(b=>{if(i<b.ec.length)result.push(b.ec[i]);});
+        return result;
+      }
+
+      function codewordsToBits(cw) { const bits=[]; cw.forEach(b=>{for(let i=7;i>=0;i--)bits.push((b>>i)&1);}); return bits; }
+
+      function pushBits(arr, val, len) { for(let i=len-1;i>=0;i--) arr.push((val>>i)&1); }
+
+      // Reed-Solomon
+      function reedSolomon(data, ecLen) {
+        const gen = rsGenPoly(ecLen);
+        const result = new Uint8Array(ecLen);
+        data.forEach(b => {
+          const factor = b ^ result[0];
+          result.copyWithin(0, 1); result[ecLen-1] = 0;
+          gen.forEach((g, i) => { result[i] ^= gfMul(g, factor); });
+        });
+        return Array.from(result);
+      }
+
+      function rsGenPoly(degree) {
+        let poly = new Uint8Array(degree); poly[degree-1] = 1;
+        let root = 1;
+        for(let i=0;i<degree;i++){
+          for(let j=0;j<degree;j++) poly[j] = gfMul(poly[j], root) ^ (j+1<degree ? poly[j+1] : 0);
+          root = gfMul(root, 2);
+        }
+        return poly;
+      }
+
+      const GF_EXP = new Uint8Array(256), GF_LOG = new Uint8Array(256);
+      (() => { let v=1; for(let i=0;i<255;i++){GF_EXP[i]=v;GF_LOG[v]=i;v<<=1;if(v>=256)v^=0x11D;} GF_EXP[255]=GF_EXP[0]; })();
+      function gfMul(a, b) { return a===0||b===0 ? 0 : GF_EXP[(GF_LOG[a]+GF_LOG[b])%255]; }
+
+      // Drawing functions
+      function setModule(modules, isFunc, x, y, val) { modules[y][x] = val; isFunc[y][x] = true; }
+
+      function drawFinderPatterns(m, f, size) {
+        [[0,0],[size-7,0],[0,size-7]].forEach(([px,py]) => {
+          for(let dy=-1;dy<=7;dy++) for(let dx=-1;dx<=7;dx++){
+            const x=px+dx, y=py+dy;
+            if(x<0||x>=size||y<0||y>=size) continue;
+            const inOuter = dx>=0&&dx<=6&&dy>=0&&dy<=6;
+            const inInner = dx>=2&&dx<=4&&dy>=2&&dy<=4;
+            const onBorder = dx===0||dx===6||dy===0||dy===6;
+            setModule(m, f, x, y, inInner || (inOuter && onBorder));
+          }
+        });
+      }
+
+      function drawAlignmentPatterns(m, f, ver, size) {
+        if (ver < 2) return;
+        const pos = getAlignmentPositions(ver, size);
+        pos.forEach(cy => pos.forEach(cx => {
+          if ((cx<=8&&cy<=8)||(cx<=8&&cy>=size-8)||(cx>=size-8&&cy<=8)) return;
+          for(let dy=-2;dy<=2;dy++) for(let dx=-2;dx<=2;dx++)
+            setModule(m, f, cx+dx, cy+dy, Math.abs(dx)===2||Math.abs(dy)===2||dx===0&&dy===0);
+        }));
+      }
+
+      function getAlignmentPositions(ver, size) {
+        if(ver===1) return [];
+        const n = Math.floor(ver/7)+2;
+        const step = ver===32 ? 26 : Math.ceil((size-13)/(n-1)/2)*2;
+        const pos = [6];
+        for(let p=size-7;pos.length<n;p-=step) pos.splice(1, 0, p);
+        return pos;
+      }
+
+      function drawTimingPatterns(m, f, size) {
+        for(let i=8;i<size-8;i++){setModule(m,f,i,6,i%2===0);setModule(m,f,6,i,i%2===0);}
+      }
+
+      function placeDataBits(m, f, bits, size) {
+        let i=0;
+        for(let right=size-1;right>=1;right-=2){
+          if(right===6) right=5;
+          for(let vert=0;vert<size;vert++){
+            for(let j=0;j<2;j++){
+              const x = right-j;
+              const upward = ((right+1)&2)===0;
+              const y = upward ? size-1-vert : vert;
+              if(!f[y][x] && i<bits.length){m[y][x]=bits[i]===1;i++;}
+            }
+          }
+        }
+      }
+
+      function applyBestMask(m, f, size) {
+        let bestMask=0, bestScore=Infinity;
+        for(let mask=0;mask<8;mask++){
+          applyMask(m, f, mask, size);
+          const score = penaltyScore(m, size);
+          if(score < bestScore){bestScore=score;bestMask=mask;}
+          applyMask(m, f, mask, size);
+        }
+        applyMask(m, f, bestMask, size);
+        return bestMask;
+      }
+
+      function applyMask(m, f, mask, size) {
+        for(let y=0;y<size;y++) for(let x=0;x<size;x++){
+          if(f[y][x]) continue;
+          let invert=false;
+          switch(mask){
+            case 0:invert=(y+x)%2===0;break;case 1:invert=y%2===0;break;
+            case 2:invert=x%3===0;break;case 3:invert=(y+x)%3===0;break;
+            case 4:invert=(Math.floor(y/2)+Math.floor(x/3))%2===0;break;
+            case 5:invert=y*x%2+y*x%3===0;break;case 6:invert=(y*x%2+y*x%3)%2===0;break;
+            case 7:invert=((y+x)%2+y*x%3)%2===0;break;
+          }
+          if(invert) m[y][x]=!m[y][x];
+        }
+      }
+
+      function penaltyScore(m, size) {
+        let score=0;
+        // Simplified penalty
+        for(let y=0;y<size;y++){let run=1;for(let x=1;x<size;x++){if(m[y][x]===m[y][x-1])run++;else{if(run>=5)score+=run-2;run=1;}}if(run>=5)score+=run-2;}
+        for(let x=0;x<size;x++){let run=1;for(let y=1;y<size;y++){if(m[y][x]===m[y-1][x])run++;else{if(run>=5)score+=run-2;run=1;}}if(run>=5)score+=run-2;}
+        return score;
+      }
+
+      function drawFormatBits(m, mask, size) {
+        const data = 0 << 3 | mask; // EC level L = 01, but simplified
+        let rem = data;
+        for(let i=0;i<10;i++) rem = (rem<<1)^((rem>>9)*0x537);
+        const bits = (data<<10|rem)^0x5412;
+        for(let i=0;i<=5;i++) m[8][i] = ((bits>>i)&1)===1;
+        m[8][7] = ((bits>>6)&1)===1; m[8][8] = ((bits>>7)&1)===1; m[7][8] = ((bits>>8)&1)===1;
+        for(let i=9;i<15;i++) m[14-i][8] = ((bits>>i)&1)===1;
+        for(let i=0;i<8;i++) m[size-1-i][8] = ((bits>>i)&1)===1;
+        m[8][size-8] = ((bits>>8)&1)===1;
+        for(let i=9;i<15;i++) m[8][size-15+i] = ((bits>>i)&1)===1;
+      }
+
+      function drawVersionBits(m, ver, size) {
+        let rem = ver;
+        for(let i=0;i<12;i++) rem = (rem<<1)^((rem>>11)*0x1F25);
+        const bits = ver<<12|rem;
+        for(let i=0;i<18;i++){
+          const val = ((bits>>i)&1)===1;
+          const a = size-11+i%3, b = Math.floor(i/3);
+          m[b][a] = val; m[a][b] = val;
+        }
+      }
+
+      function toSVG(modules, pixelSize) {
+        const size = modules.length;
+        const totalSize = size * pixelSize;
+        let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${totalSize}" height="${totalSize}" viewBox="0 0 ${size} ${size}">`;
+        svg += `<rect width="${size}" height="${size}" fill="white"/>`;
+        for(let y=0;y<size;y++) for(let x=0;x<size;x++) if(modules[y][x]) svg += `<rect x="${x}" y="${y}" width="1" height="1" fill="black"/>`;
+        svg += '</svg>';
+        return svg;
+      }
+
+      return { generate, toSVG };
+    })();
+
+    function showQRCode() {
+      const url = generateShareURL(7);
+      try {
+        const modules = QR.generate(url);
+        document.getElementById('qr-canvas').innerHTML = QR.toSVG(modules, 6);
+        document.getElementById('qr-overlay').classList.add('active');
+      } catch(e) {
+        alert('Could not generate QR code. Try sharing via the Share button instead.');
+      }
+    }
+    function closeQR() { document.getElementById('qr-overlay').classList.remove('active'); }
+
+    // ========== GOOGLE SHEETS SYNC ==========
+    async function pushToSheet(entry) {
+      const data = loadData();
+      const url = data.sheetURL;
+      if (!url) return;
+      const statusEl = document.getElementById('sync-status-checkin');
+      try {
+        statusEl.textContent = 'Syncing to Google Sheet...';
+        statusEl.className = 'sync-status';
+        const params = new URLSearchParams({
+          date: entry.date, type: entry.type, leg: entry.stretchedLeg,
+          stretchedRating: entry.stretchedLegRating, unstretchedRating: entry.unstretchedLegRating,
+          comparison: entry.comparison, hadPain: entry.hadPain ? 'yes' : 'no',
+          painRating: entry.painRating || 0, notes: entry.notes || ''
+        });
+        const resp = await fetch(url, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: params });
+        const result = await resp.json();
+        if (result.result === 'success' || result.result === 'updated') {
+          statusEl.textContent = '\u2705 Synced to Google Sheet';
+          statusEl.className = 'sync-status success';
+        } else {
+          statusEl.textContent = '\u26A0\uFE0F Sync issue: ' + (result.message || 'unknown');
+          statusEl.className = 'sync-status error';
+        }
+      } catch(e) {
+        statusEl.textContent = 'Saved locally (Sheet sync unavailable)';
+        statusEl.className = 'sync-status';
+      }
     }
 
     // ========== SETTINGS ==========
-    function saveName() {
+    function saveName() { const data = loadData(); data.userName = document.getElementById('setting-name').value.trim() || 'Max'; saveData(data); }
+    function saveSheetURL() {
       const data = loadData();
-      data.userName = document.getElementById('setting-name').value.trim() || 'Max';
+      data.sheetURL = document.getElementById('setting-sheet-url').value.trim();
       saveData(data);
+      const status = document.getElementById('sync-test-status');
+      if (data.sheetURL) { status.textContent = '\u2705 URL saved. Entries will sync on next check-in.'; status.className = 'sync-status success'; }
+      else { status.textContent = 'Sync disabled (no URL)'; status.className = 'sync-status'; }
     }
 
     function exportData() {
-      const data = loadData();
-      const json = JSON.stringify(data, null, 2);
-      navigator.clipboard.writeText(json).then(() => {
-        alert('Data copied to clipboard!');
-      }).catch(() => {
-        // Fallback
-        const ta = document.createElement('textarea');
-        ta.value = json;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
+      const json = JSON.stringify(loadData(), null, 2);
+      navigator.clipboard.writeText(json).then(() => { alert('Data copied to clipboard!'); }).catch(() => {
+        const ta = document.createElement('textarea'); ta.value = json; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
         alert('Data copied to clipboard!');
       });
     }
-
-    function confirmClear() {
-      document.getElementById('clear-modal').classList.add('active');
-    }
-
-    function closeClearModal() {
-      document.getElementById('clear-modal').classList.remove('active');
-    }
-
-    function clearAllData() {
-      localStorage.removeItem(STORAGE_KEY);
-      closeClearModal();
-      alert('All data cleared.');
-      switchTab('checkin');
-    }
+    function confirmClear() { document.getElementById('clear-modal').classList.add('active'); }
+    function closeClearModal() { document.getElementById('clear-modal').classList.remove('active'); }
+    function clearAllData() { localStorage.removeItem(STORAGE_KEY); closeClearModal(); alert('All data cleared.'); switchTab('checkin'); }
 
     // ========== UTILS ==========
-    function escapeHtml(str) {
-      const d = document.createElement('div');
-      d.textContent = str;
-      return d.innerHTML;
-    }
-
+    function escapeHtml(str) { const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
     function formatDateLong(dateStr) {
       const d = new Date(dateStr + 'T12:00:00');
       const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
       return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
     }
 
-    // ========== PWA REGISTRATION ==========
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').catch(() => {});
-    }
+    // ========== PWA ==========
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
 
     // ========== STARTUP ==========
     init();
