@@ -1425,7 +1425,16 @@
     }
     function confirmClear() { document.getElementById('clear-modal').classList.add('active'); }
     function closeClearModal() { document.getElementById('clear-modal').classList.remove('active'); }
-    function clearAllData() { localStorage.removeItem(STORAGE_KEY); closeClearModal(); alert('All data cleared.'); switchTab('checkin'); }
+    async function clearAllData() {
+      localStorage.removeItem(STORAGE_KEY);
+      closeClearModal();
+      // Also wipe the Google Sheet
+      try {
+        await fetch(SHEET_URL + '?action=clear', { redirect: 'follow' });
+      } catch(e) { /* best effort */ }
+      alert('All data cleared.');
+      switchTab('checkin');
+    }
 
     // ========== UTILS ==========
     function escapeHtml(str) { const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
