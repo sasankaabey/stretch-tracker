@@ -1,4 +1,4 @@
-const CACHE_NAME = 'stretch-tracker-v4';
+const CACHE_NAME = 'stretch-tracker-v5';
 const ASSETS = [
   './',
   './index.html',
